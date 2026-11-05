@@ -7710,8 +7710,7 @@ body:has(.auth-page) .dating-header {
 
 .legal {
   min-height: 100dvh;
-  padding: calc(var(--header-h) + 1.5rem) 1rem
-           calc(var(--bottom-nav-h) + var(--safe-bottom) + 2.5rem);
+  padding: 1.5rem 1rem calc(var(--bottom-nav-h) + var(--safe-bottom) + 2.5rem);
   background: var(--home-surface);
 }
 
@@ -7794,7 +7793,342 @@ body:has(.auth-page) .dating-header {
 
 @media (min-width: 720px) {
   .legal {
-    padding-top: calc(var(--header-h) + 2.5rem);
+    padding-top: 2.5rem;
     padding-bottom: 4rem;
   }
+}
+
+/* =========================================================================
+   PROFILE PAGE  (/[locale]/gatsnoba/[username])
+   Rebuilt as an app screen rather than a centred web card. The photo is the
+   screen: full-bleed, paged, with the chrome floating over it. Everything
+   below is quiet so the photo and the two actions carry the page.
+
+   Replaces inline styles that referenced --com-* tokens from the community
+   app; none of those are defined here, so they resolved to nothing.
+   ========================================================================= */
+
+.pprofile {
+  --pprofile-bar-h: 72px;
+  padding-bottom: calc(
+    var(--bottom-nav-h) + var(--safe-bottom) + var(--pprofile-bar-h) + 1rem
+  );
+  background: var(--bg);
+  min-height: 100dvh;
+}
+
+/* ---- hero ------------------------------------------------------------- */
+
+.pprofile__hero {
+  position: relative;
+  background: var(--bg-elevated);
+}
+
+.pphotos {
+  position: relative;
+}
+
+.pphotos__track {
+  display: flex;
+  aspect-ratio: 4 / 5;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.pphotos__track::-webkit-scrollbar { display: none; }
+
+.pphotos__item {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+.pphotos__item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+
+/* Story-style progress. Reads scroll position; never drives it. */
+.pphotos__segments {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  gap: 4px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.pphotos__seg {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: background 160ms ease;
+}
+.pphotos__seg.is-active { background: #fff; }
+
+/* Tap the outer thirds to page, the way every photo app behaves. */
+.pphotos__tap {
+  position: absolute;
+  top: 0;
+  bottom: 22%;
+  width: 32%;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  z-index: 2;
+  -webkit-tap-highlight-color: transparent;
+}
+.pphotos__tap--prev { left: 0; }
+.pphotos__tap--next { right: 0; }
+.pphotos__tap:disabled { cursor: default; }
+
+.pprofile__nophoto {
+  aspect-ratio: 4 / 5;
+  display: grid;
+  place-items: center;
+  background: var(--bg-card);
+}
+
+/* ---- floating chrome --------------------------------------------------- */
+
+.pprofile__chrome {
+  position: absolute;
+  top: 0.9rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  z-index: 4;
+}
+
+.pprofile__back {
+  display: grid;
+  place-items: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border-radius: 50%;
+  color: #fff;
+  text-decoration: none;
+  background: rgba(10, 10, 14, 0.42);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.pprofile__back svg { width: 22px; height: 22px; }
+
+.pprofile__edit {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  background: rgba(10, 10, 14, 0.42);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* ---- name over the photo ---------------------------------------------- */
+
+.pprofile__identity {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 4.5rem 1.15rem 1.2rem;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(6, 6, 10, 0.94) 10%,
+    rgba(6, 6, 10, 0.6) 46%,
+    transparent 100%
+  );
+}
+
+.pprofile__online {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+  padding: 0.22rem 0.6rem 0.22rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #eafff2;
+  background: rgba(32, 197, 123, 0.18);
+  border: 1px solid rgba(32, 197, 123, 0.4);
+}
+
+.pprofile__online-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #27d98a;
+  box-shadow: 0 0 0 3px rgba(39, 217, 138, 0.22);
+}
+
+.pprofile__name {
+  margin: 0;
+  font-size: clamp(1.75rem, 7vw, 2.15rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+.pprofile__where {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.97rem;
+  color: rgba(255, 255, 255, 0.82);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+}
+
+.pprofile__sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+/* ---- body -------------------------------------------------------------- */
+
+.psection {
+  padding: 1.3rem 1.15rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.psection--bio { padding-top: 1.15rem; }
+
+.psection--quiet {
+  border-bottom: 0;
+  opacity: 0.75;
+}
+
+.psection__h {
+  margin: 0 0 0.7rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+}
+
+.pbio {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.62;
+  white-space: pre-wrap;
+  max-width: 60ch;
+}
+
+/* Hairline-divided facts, not a grid of identical rounded cards. */
+.pfacts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.pfact {
+  padding: 0.9rem 1.15rem;
+  border-top: 1px solid var(--border);
+  min-width: 0;
+}
+.pfact:nth-child(odd):not(.pfact--wide) { border-right: 1px solid var(--border); }
+.pfact--wide { grid-column: 1 / -1; }
+
+.pfact__k {
+  margin: 0 0 0.2rem;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.pfact__v {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* ---- sticky action bar, sits above the tab bar in the thumb zone ------- */
+
+.pbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--bottom-nav-h) + var(--safe-bottom));
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 1rem;
+  background: rgba(8, 8, 12, 0.86);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-top: 1px solid var(--border);
+}
+
+.pbar__cta {
+  flex: 1;
+  min-height: var(--tap-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.25rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 650;
+  color: #fff;
+  text-decoration: none;
+  background: var(--gradient-accent);
+  box-shadow: 0 6px 22px rgba(232, 168, 56, 0.22);
+}
+
+/* The like button is an absolutely-positioned card overlay by default;
+   in the action bar it becomes an ordinary flex item. */
+.pbar .dating-like-btn {
+  position: static;
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  background: var(--bg-card);
+  border-color: var(--border-strong);
+}
+
+@media (min-width: 720px) {
+  .pprofile {
+    width: min(520px, 100%);
+    margin: 0 auto;
+    border-inline: 1px solid var(--border);
+  }
+  .pbar {
+    width: min(520px, 100%);
+    left: 50%;
+    transform: translateX(-50%);
+    border-inline: 1px solid var(--border);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pphotos__track { scroll-behavior: auto; }
+  .pphotos__seg { transition: none; }
 }

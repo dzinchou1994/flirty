@@ -51,6 +51,8 @@ const dating = {
       loading: "Loading…",
       viewProfile: "Full profile",
     },
+    prevPhoto: "Previous photo",
+    nextPhoto: "Next photo",
     menu: {
       sectionLegal: "Legal",
       terms: "Terms of Service",

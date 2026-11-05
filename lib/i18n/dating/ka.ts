@@ -51,6 +51,8 @@ const dating = {
       loading: "იტვირთება…",
       viewProfile: "სრული პროფილი",
     },
+    prevPhoto: "წინა ფოტო",
+    nextPhoto: "შემდეგი ფოტო",
     menu: {
       sectionLegal: "სამართლებრივი",
       terms: "მომსახურების პირობები",
