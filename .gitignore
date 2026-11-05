@@ -1,0 +1,17 @@
+node_modules
+.next
+.env
+.env.local
+.env.production
+*.tsbuildinfo
+.DS_Store
+.deploy-keys
+.local-db/
+
+# Uploaded user photos live here with the local media driver.
+# Committing them would put real users' pictures in version control.
+/public/uploads/
+.env.*.local
+/coverage/
+*.log
+.env.sync.local

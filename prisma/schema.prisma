@@ -1,0 +1,373 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Generate-only. Migrations are owned by the community app repo.
+// Never run prisma migrate / db push from this project.
+
+enum Plan {
+  USER
+  PREMIUM
+}
+
+model User {
+  id                   String    @id @default(cuid())
+  username             String    @unique
+  email                String?   @unique
+  emailVerifiedAt      DateTime?
+  passwordHash         String?
+  avatar               String?
+  profileIcon          String?
+  gender               String?
+  bio                  String    @default("")
+  points               Int       @default(0)
+  isPremium            Boolean   @default(false)
+  plan                 Plan      @default(USER)
+  isAdmin              Boolean   @default(false)
+  premiumUntil         DateTime?
+  stripeCustomerId     String?   @unique
+  stripeSubscriptionId String?   @unique
+  createdAt            DateTime  @default(now())
+  lastActiveAt         DateTime  @default(now())
+
+  nearbyLat       Float?
+  nearbyLng       Float?
+  nearbyFuzzM     Int       @default(100)
+  nearbySharing   Boolean   @default(false)
+  nearbyUpdatedAt DateTime?
+
+  datingProfile       DatingProfile?
+  sentDatingLikes     DatingLike[]          @relation("SentDatingLikes")
+  datingReports       DatingProfileReport[] @relation("DatingProfileReports")
+  datingContactHashes DatingContactHash[]
+  blocksInitiated     DatingBlock[]         @relation("DatingBlocksInitiated")
+  blocksReceived      DatingBlock[]         @relation("DatingBlocksReceived")
+  albumGrantsOwned    DatingAlbumGrant[]    @relation("DatingAlbumGrantsOwned")
+  albumGrantsReceived DatingAlbumGrant[]    @relation("DatingAlbumGrantsReceived")
+  sentDatingTaps      DatingTap[]           @relation("SentDatingTaps")
+  sentDatingPasses    DatingPass[]          @relation("SentDatingPasses")
+  profileViewsSent    DatingProfileView[]   @relation("DatingProfileViewsSent")
+  datingFilterPreset  DatingFilterPreset?
+  oauthAccounts       OAuthAccount[]
+  sentMessages        Message[]             @relation("SentMessages")
+  receivedMessages    Message[]             @relation("ReceivedMessages")
+  dmReadStates        DmReadState[]         @relation("DmReadStates")
+  dmReadPeers         DmReadState[]         @relation("DmReadPeers")
+  deletionRequest     UserDeletionRequest?
+
+  @@index([lastActiveAt])
+  @@index([nearbySharing, nearbyUpdatedAt])
+}
+
+model OAuthAccount {
+  id                String   @id @default(cuid())
+  userId            String
+  provider          String
+  providerAccountId String
+  createdAt         DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model DatingProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  genderBucket String
+  presetCase   String
+  city         String   @default("other")
+  bio          String   @default("") @db.Text
+  name         String?
+  age          Int?
+  height       Int?
+  zodiacSign   String?
+  /// @deprecated Prefer lookingForTags. Kept for dual-read during migration.
+  lookingFor   String?
+  interests    String?
+  showMe       String   @default("everyone")
+  isVisible    Boolean  @default(false)
+  moderationStatus String    @default("active")
+  moderationReason String?   @db.Text
+  moderatedAt      DateTime?
+  photosPublishedAt DateTime?
+
+  hideFromContacts      Boolean @default(false)
+  requireMutualInterest Boolean @default(false)
+  phoneHash             String?
+  phoneVerifiedAt       DateTime?
+
+  /// discoverable | mutual_only | incognito
+  visibilityMode   String  @default("discoverable")
+  /// ~1km geohash cell; exact coords never leave the server for discovery.
+  geohashCell      String?
+  presenceEnabled  Boolean @default(true)
+
+  // Optional discovery attributes (0033). All nullable / empty = unanswered.
+  weightKg            Int?
+  bodyType            String?
+  relationshipStatus  String?
+  lookingForTags      String[] @default([])
+  meetAt              String[] @default([])
+  pronouns            String?
+  genderIdentity      String?
+  languages           String[] @default([])
+  smoking             String?
+  drinking            String?
+  kids                String?
+  education           String?
+  work                String?
+  /// LGBT-mode only (hidden in straight presets).
+  position            String?
+  communityTags       String[] @default([])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photos        DatingPhoto[]
+  likesReceived DatingLike[]
+  tapsReceived  DatingTap[]
+  promptAnswers DatingPromptAnswer[]
+  passesReceived DatingPass[]
+  reports       DatingProfileReport[]
+  profileViews  DatingProfileView[]
+
+  @@index([genderBucket, isVisible, updatedAt(sort: Desc)])
+  @@index([city, isVisible, updatedAt(sort: Desc)])
+  @@index([moderationStatus, updatedAt(sort: Desc)])
+  @@index([phoneHash])
+  @@index([geohashCell])
+  @@index([visibilityMode, isVisible])
+  @@index([bodyType])
+  @@index([relationshipStatus])
+  @@index([age])
+  @@index([height])
+  @@index([position])
+}
+
+/// Last-used discovery filter set, restored on return to browse.
+model DatingFilterPreset {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  filters   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DatingContactHash {
+  id        String   @id @default(cuid())
+  userId    String
+  phoneHash String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, phoneHash])
+  @@index([phoneHash])
+  @@index([userId])
+}
+
+/// Symmetric in effect: neither party sees the other in discovery or chat.
+model DatingBlock {
+  id            String   @id @default(cuid())
+  blockerId     String
+  blockedUserId String
+  createdAt     DateTime @default(now())
+
+  blocker User @relation("DatingBlocksInitiated", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation("DatingBlocksReceived", fields: [blockedUserId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedUserId])
+  @@index([blockerId])
+  @@index([blockedUserId])
+}
+
+/// Who opened whose dating profile (Grindr-style "Viewed Me").
+model DatingProfileView {
+  id        String   @id @default(cuid())
+  viewerId  String
+  profileId String
+  viewedAt  DateTime @default(now())
+
+  viewer  User          @relation("DatingProfileViewsSent", fields: [viewerId], references: [id], onDelete: Cascade)
+  profile DatingProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([viewerId, profileId])
+  @@index([profileId, viewedAt(sort: Desc)])
+  @@index([viewerId, viewedAt(sort: Desc)])
+}
+
+model DatingAlbumGrant {
+  id           String   @id @default(cuid())
+  ownerUserId  String
+  viewerUserId String
+  grantedAt    DateTime @default(now())
+
+  owner  User @relation("DatingAlbumGrantsOwned", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  viewer User @relation("DatingAlbumGrantsReceived", fields: [viewerUserId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerUserId, viewerUserId])
+  @@index([viewerUserId])
+}
+
+model DatingPhoto {
+  id         String   @id @default(cuid())
+  profileId  String
+  url        String
+  sortOrder  Int      @default(0)
+  status     String   @default("approved")
+  /// public | private — private URLs are signed and short-lived.
+  /// Album UI defaults new uploads to private; profile editor still sends public.
+  visibility String   @default("private")
+  createdAt  DateTime @default(now())
+
+  profile DatingProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  likes   DatingLike[]
+
+  @@index([profileId, sortOrder])
+  @@index([profileId, status])
+  @@index([profileId, visibility])
+  @@index([status, createdAt(sort: Desc)])
+}
+
+/// Lightweight signal; does not create a match. One tap per pair per 24h (app-enforced).
+model DatingTap {
+  id          String   @id @default(cuid())
+  fromUserId  String
+  toProfileId String
+  createdAt   DateTime @default(now())
+
+  fromUser  User          @relation("SentDatingTaps", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toProfile DatingProfile @relation(fields: [toProfileId], references: [id], onDelete: Cascade)
+
+  @@index([toProfileId, createdAt(sort: Desc)])
+  @@index([fromUserId, createdAt(sort: Desc)])
+  @@index([fromUserId, toProfileId, createdAt(sort: Desc)])
+}
+
+model DatingLike {
+  id          String   @id @default(cuid())
+  fromUserId  String
+  toProfileId String
+  /// The element the like was aimed at. Both null = liked the whole profile.
+  photoId        String?
+  promptAnswerId String?
+  /// Optional opener sent with the like — this is what prevents a blank chat.
+  comment     String?
+  createdAt   DateTime @default(now())
+
+  fromUser     User                @relation("SentDatingLikes", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toProfile    DatingProfile       @relation(fields: [toProfileId], references: [id], onDelete: Cascade)
+  photo        DatingPhoto?        @relation(fields: [photoId], references: [id], onDelete: SetNull)
+  promptAnswer DatingPromptAnswer? @relation(fields: [promptAnswerId], references: [id], onDelete: SetNull)
+
+  @@unique([fromUserId, toProfileId])
+  @@index([toProfileId, createdAt(sort: Desc)])
+  @@index([fromUserId, createdAt(sort: Desc)])
+}
+
+model DatingProfileReport {
+  id         String    @id @default(cuid())
+  profileId  String
+  reporterId String
+  reason     String
+  createdAt  DateTime  @default(now())
+  /// When the report entered the queue (SLA clock). Defaults to createdAt.
+  receivedAt DateTime  @default(now())
+  /// When moderation closed the report (null = still open).
+  resolvedAt DateTime?
+
+  profile  DatingProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  reporter User          @relation("DatingProfileReports", fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, reporterId])
+  @@index([profileId, createdAt(sort: Desc)])
+  @@index([resolvedAt, receivedAt])
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  senderId    String
+  recipientId String?
+  roomId      String?
+  body        String   @db.Text
+  isDating    Boolean  @default(false)
+  archivedAt  DateTime?
+  createdAt   DateTime @default(now())
+
+  sender    User  @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient User? @relation("ReceivedMessages", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@index([roomId, archivedAt, createdAt(sort: Desc)])
+  @@index([senderId, recipientId, createdAt(sort: Desc)])
+  @@index([recipientId, archivedAt, createdAt(sort: Desc)])
+  @@index([isDating, recipientId, archivedAt, createdAt(sort: Desc)])
+}
+
+model DmReadState {
+  userId     String
+  peerId     String
+  lastReadAt DateTime @default(now())
+
+  user User @relation("DmReadStates", fields: [userId], references: [id], onDelete: Cascade)
+  peer User @relation("DmReadPeers", fields: [peerId], references: [id], onDelete: Cascade)
+
+  @@id([userId, peerId])
+  @@index([userId])
+}
+
+/// Queued User erasure for the community app. Dating data is deleted immediately.
+/// Login fails as soon as a pending/processing row exists for the user.
+model UserDeletionRequest {
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  requestedAt DateTime  @default(now())
+  /// pending | processing | done | failed
+  status      String    @default("pending")
+  processedAt DateTime?
+  error       String?   @db.Text
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, requestedAt])
+}
+
+model DatingPromptAnswer {
+  id        String   @id @default(cuid())
+  profileId String
+  /// Key into the prompt library in lib/dating/prompts.ts — not free text,
+  /// so the question itself stays translatable.
+  promptKey String
+  answer    String   @db.Text
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile DatingProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  likes   DatingLike[]
+
+  @@unique([profileId, promptKey])
+  @@index([profileId, sortOrder])
+}
+
+model DatingPass {
+  id          String   @id @default(cuid())
+  fromUserId  String
+  toProfileId String
+  createdAt   DateTime @default(now())
+
+  fromUser  User          @relation("SentDatingPasses", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toProfile DatingProfile @relation(fields: [toProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([fromUserId, toProfileId])
+  @@index([fromUserId, createdAt(sort: Desc)])
+}
