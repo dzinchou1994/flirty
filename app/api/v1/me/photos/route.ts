@@ -45,8 +45,9 @@ export async function POST(req: Request) {
     webp = await processDatingPhoto(bytes);
     await assertNoExif(webp);
   } catch (e) {
-    console.error('[photos] process', e);
-    return err('PHOTO_PROCESS_FAILED', 'Could not process photo', { status: 400 });
+    const reason = e instanceof Error ? e.message : String(e);
+    console.error('[photos] process failed:', reason, e);
+    return err('PHOTO_PROCESS_FAILED', `Could not process photo (${reason})`, { status: 400 });
   }
 
   let status: 'approved' | 'pending' = 'approved';
@@ -54,11 +55,15 @@ export async function POST(req: Request) {
     const { screenImageBuffer } = await import('@/lib/media/image-moderation');
     const decision = await screenImageBuffer(webp);
     if (!decision.ok) {
-      if (decision.reason === 'unavailable') {
-        status = 'pending';
-      } else {
-        return err('PHOTO_REJECTED', `Photo rejected (${decision.reason})`, { status: 400 });
+      if (decision.reason === 'explicit') {
+        // The only hard refusal. Nudity and sexual acts are never stored.
+        return err('PHOTO_REJECTED_EXPLICIT', 'Photo rejected (explicit)', { status: 400 });
       }
+      // 'noFace', 'drawing' and 'unavailable' are quality signals or classifier
+      // failures, not safety violations. Blocking on them rejected ordinary
+      // clothed photos and told the user they were nude. Queue for a human.
+      console.info('[photos] queued for review:', decision.reason);
+      status = 'pending';
     }
   } catch (e) {
     console.warn('[photos] screening unavailable', e);

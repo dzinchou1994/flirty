@@ -9,7 +9,7 @@ import {
   distanceBucketBetweenCells,
   type DistanceBucket,
 } from '@/lib/dating/geohash';
-import { presenceFromLastActive } from '@/lib/dating/presence';
+import { presenceFromLastActive, onlineSince } from '@/lib/dating/presence';
 import {
   parseDatingCity,
   parseDatingGenderBucket,
@@ -28,7 +28,11 @@ function visibleBase() {
     isVisible: true,
     moderationStatus: 'active',
     bio: { not: '' },
-    photos: { some: { status: 'approved', visibility: 'public' } },
+    // Same rule as the discovery feed: no public photo is fine while online.
+    OR: [
+      { photos: { some: { status: 'approved', visibility: 'public' } } },
+      { user: { lastActiveAt: { gte: onlineSince() } } },
+    ],
   };
 }
 

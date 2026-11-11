@@ -22,3 +22,9 @@ export function presenceFromLastActive(
   if (age < WEEK_MS) return 'active_this_week';
   return 'active_this_week';
 }
+
+
+/** Cut-off for "online now", as a Date, for use in Prisma where clauses. */
+export function onlineSince(now: number = Date.now()): Date {
+  return new Date(now - ONLINE_MS);
+}

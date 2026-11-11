@@ -177,7 +177,7 @@ const dating = {
       "Filter profiles, like the ones you're into and open a chat after matching.",
     editorTitle: "Dating profile",
     editorLead:
-      "Create a profile with a photo - without a picture your profile won't appear and you won't see others.",
+      "Add a photo so people can see you. Without one your profile only appears while you are online.",
     editProfile: "My dating profile",
     loginToCreate: "Create profile",
     backToBrowse: "Back",

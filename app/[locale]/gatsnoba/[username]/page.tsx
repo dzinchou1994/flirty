@@ -47,10 +47,17 @@ export default async function DatingProfilePage({ params }: Props) {
   const d = getDatingDict(locale);
 
   const profile = await getDatingProfileByUsername(username);
-  if (!profile || !profile.isVisible || profile.photos.length === 0) notFound();
+  if (!profile) notFound();
 
   const currentUser = await getSessionUser();
   const isOwnProfile = currentUser?.id === profile.userId;
+
+  // Visibility and photo rules apply to other people's profiles. Your own
+  // always opens, so you can see how it looks before it is published —
+  // including when it is hidden or still waiting for a photo.
+  if (!isOwnProfile && (!profile.isVisible || profile.photos.length === 0)) {
+    notFound();
+  }
 
   // Guests / users without a dating profile cannot view others.
   if (!isOwnProfile) {

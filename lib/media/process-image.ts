@@ -1,6 +1,24 @@
 import sharp from 'sharp';
 
 /**
+ * Convert an iPhone HEIC/HEIF buffer to JPEG. Returns null rather than throwing
+ * so a converter problem degrades to "try sharp directly" instead of rejecting
+ * the photo. Uses a dynamic import: a bare require() of this package is what
+ * the bundler could not resolve at runtime.
+ */
+async function heicToJpeg(buffer: Buffer): Promise<Buffer | null> {
+  try {
+    const mod = await import('heic-convert');
+    // CJS interop: the package may arrive as the function itself or under .default
+    const convert = (mod.default ?? (mod as unknown)) as typeof mod.default;
+    return Buffer.from(await convert({ buffer, format: 'JPEG', quality: 0.9 }));
+  } catch (err) {
+    console.error('[process-image] heic-convert unavailable, falling back to sharp', err);
+    return null;
+  }
+}
+
+/**
  * Decode → autorotate from EXIF orientation → resize → WebP.
  * sharp drops EXIF/GPS by default when encoding to WebP; we never call
  * withMetadata(), so nothing identifiable is written to R2.
@@ -11,15 +29,24 @@ export async function processDatingPhoto(buffer: Buffer): Promise<Buffer> {
     buffer.length >= 12 &&
     buffer.toString('ascii', 4, 8) === 'ftyp' &&
     /heic|heif|mif1|msf1/i.test(buffer.toString('ascii', 8, 12));
-  if (isHeic) {
-    const convert = require('heic-convert') as (opts: {
-      buffer: Buffer;
-      format: 'JPEG';
-      quality: number;
-    }) => Promise<ArrayBuffer>;
-    input = Buffer.from(await convert({ buffer, format: 'JPEG', quality: 0.9 }));
+  // Try sharp first, including for HEIC: most libvips builds ship with HEIF
+  // support, and that path needs no extra module. heic-convert is only a
+  // fallback, because its libheif wasm is loaded through a dynamic require
+  // the bundler cannot follow.
+  try {
+    return await encode(input);
+  } catch (firstErr) {
+    if (!isHeic) throw firstErr;
+    const converted = await heicToJpeg(buffer);
+    if (!converted) {
+      console.error('[process-image] sharp cannot decode HEIF and heic-convert is unavailable', firstErr);
+      throw new Error('HEIC_UNSUPPORTED');
+    }
+    return encode(converted);
   }
+}
 
+function encode(input: Buffer): Promise<Buffer> {
   return sharp(input)
     .rotate()
     .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })

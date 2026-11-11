@@ -356,9 +356,13 @@ export function DatingProfileEditor({
     setFormValues((prev) => ({ ...prev, [key]: value }));
   }
 
-  function resolveError(key: string | undefined) {
-    if (!key) return messages.errors.photoUploadFailed;
-    return messages.errors[key] ?? messages.errors.photoUploadFailed;
+  function resolveError(key: string | undefined, detail?: string) {
+    const base = !key
+      ? messages.errors.photoUploadFailed
+      : (messages.errors[key] ?? messages.errors.photoUploadFailed);
+    // Append the server's own reason when it has one, so a failure is
+    // diagnosable from the screen instead of only from container logs.
+    return detail ? `${base} (${detail})` : base;
   }
 
   function addFiles(fileList: FileList | null) {
@@ -409,7 +413,7 @@ export function DatingProfileEditor({
       const result = await addPhoto(null, fd);
       if (result?.error) {
         setUploading(false);
-        setStatus({ type: 'error', text: resolveError(result.error) });
+        setStatus({ type: 'error', text: resolveError(result.error, result.detail) });
         return false;
       }
       URL.revokeObjectURL(item.previewUrl);
@@ -443,7 +447,7 @@ export function DatingProfileEditor({
 
       const saved = await upsertProfile(null, formData);
       if (saved?.error) {
-        setStatus({ type: 'error', text: resolveError(saved.error) });
+        setStatus({ type: 'error', text: resolveError(saved.error, saved.detail) });
         router.refresh();
         return;
       }
@@ -485,7 +489,7 @@ export function DatingProfileEditor({
     const result = await action(null, fd);
     setActingPhotoId(null);
     if (result?.error) {
-      setStatus({ type: 'error', text: resolveError(result.error) });
+      setStatus({ type: 'error', text: resolveError(result.error, result.detail) });
       return;
     }
     setStatus({
@@ -503,7 +507,7 @@ export function DatingProfileEditor({
     const result = await setVisibility(null, fd);
     setPrivacyAction(null);
     if (result?.error) {
-      setStatus({ type: 'error', text: resolveError(result.error) });
+      setStatus({ type: 'error', text: resolveError(result.error, result.detail) });
       return;
     }
     setStatus({
@@ -521,7 +525,7 @@ export function DatingProfileEditor({
     const result = await deleteProfile(null, new FormData(event.currentTarget));
     setPrivacyAction(null);
     if (result?.error) {
-      setStatus({ type: 'error', text: resolveError(result.error) });
+      setStatus({ type: 'error', text: resolveError(result.error, result.detail) });
       return;
     }
     clearDatingEditorDraft(draftKey);

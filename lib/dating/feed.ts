@@ -10,7 +10,7 @@ import {
   distanceBucketBetweenCells,
   type DistanceBucket,
 } from '@/lib/dating/geohash';
-import { presenceFromLastActive } from '@/lib/dating/presence';
+import { presenceFromLastActive, onlineSince } from '@/lib/dating/presence';
 import {
   parseDatingGenderBucket,
   type DatingCity,
@@ -44,7 +44,14 @@ export function datingFeedVisibleWhere() {
     isVisible: true,
     moderationStatus: 'active',
     bio: { not: '' },
-    photos: { some: { status: 'approved' } },
+    // A profile normally needs an approved photo. Someone who is online right
+    // now is shown without one: there are many photoless accounts and an empty
+    // grid is worse than a placeholder card. They drop out again the moment
+    // they go offline, so the feed never fills with dormant blank profiles.
+    OR: [
+      { photos: { some: { status: 'approved' } } },
+      { user: { lastActiveAt: { gte: onlineSince() } } },
+    ],
   };
 }
 

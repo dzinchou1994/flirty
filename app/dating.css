@@ -8132,3 +8132,29 @@ body:has(.auth-page) .dating-header {
   .pphotos__track { scroll-behavior: auto; }
   .pphotos__seg { transition: none; }
 }
+
+/* =========================================================================
+   MISSING / BROKEN PHOTO FALLBACK
+   A photo whose file is gone, still pending, or private-without-access used to
+   render as the browser's broken-image icon. Painting the brand mark as the
+   img's own background means a failed load degrades to a placeholder, while a
+   successful load simply covers it. No extra request, no JS, every call site.
+   ========================================================================= */
+
+.dating-editor__photo-img,
+.dating-album__img,
+.pphotos__item img,
+.dating-card__media img,
+.dating-grid img,
+.dating-like-row__thumb img,
+.dating-thread__avatar img,
+.dating-msg__avatar img {
+  background-color: var(--bg-card);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M60 92C48 80 28 64 28 46c0-12 9-20 20-20 6 0 10 3 12 8 2-5 6-8 12-8 11 0 20 8 20 20 0 18-20 34-32 46z' fill='%23e8a838' opacity='0.42'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 40% auto;
+  /* Hide the alt text / broken-file glyph so only the mark shows. */
+  color: transparent;
+  font-size: 0;
+}

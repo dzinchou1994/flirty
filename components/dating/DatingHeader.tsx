@@ -176,7 +176,10 @@ export function DatingHeader({
 
         {isLoggedIn ? (
           <Link
-            href={`${base}/user/dating/`}
+            /* Opens your profile exactly as other people see it. The editor is
+               one tap further in, via the Edit button on that page: there was
+               previously no way to preview your own public profile at all. */
+            href={username ? `${base}/gatsnoba/${username}/` : `${base}/user/dating/`}
             className="dating-header__avatar"
             aria-label={labels.profile}
           >

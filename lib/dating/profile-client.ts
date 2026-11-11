@@ -1,5 +1,11 @@
 export type DatingActionState = {
   error?: string;
+  /**
+   * The server's own explanation, when it has one. The UI translates `error`
+   * from a fixed key list, so a generic key told the user nothing about why an
+   * upload actually failed. This carries the real reason through.
+   */
+  detail?: string;
   success?: string;
   fieldErrors?: Record<string, string>;
 } | null;
@@ -69,6 +75,8 @@ const API_ERROR_TO_MESSAGE_KEY: Record<string, string> = {
   PHOTO_TOO_LARGE: 'photoTooLarge',
   PHOTO_NOT_FOUND: 'photoNotFound',
   PHOTO_PROCESS_FAILED: 'invalidPhotoType',
+  PHOTO_REJECTED_EXPLICIT: 'photoRejectedExplicit',
+  // Legacy code kept so an older client build still shows something sane.
   PHOTO_REJECTED: 'photoRejectedExplicit',
   VALIDATION_ERROR: 'photoUploadFailed',
 };
@@ -81,7 +89,12 @@ function mapApiError(code: string | undefined): string {
 export async function addDatingPhoto(_prev: DatingActionState, formData: FormData): Promise<DatingActionState> {
   const res = await fetch('/api/v1/me/photos/', { method: 'POST', body: formData, credentials: 'include' });
   const json = await readJson(res);
-  if (!json?.ok) return { error: mapApiError(json?.error?.code) };
+  if (!json?.ok) {
+    return {
+      error: mapApiError(json?.error?.code),
+      detail: typeof json?.error?.message === 'string' ? json.error.message : undefined,
+    };
+  }
   return { success: 'successPhotoAdded' };
 }
 

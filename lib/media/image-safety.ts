@@ -27,7 +27,10 @@ export const DEFAULT_IMAGE_SAFETY_THRESHOLDS: ImageSafetyThresholds = {
 };
 
 export type PhotoScreeningOutcome =
-  | { store: true; status: 'approved' }
+  // 'pending' holds the photo for human review instead of refusing it: used
+  // for drawings, undetected faces and classifier failures, none of which are
+  // safety violations. Only explicit content is refused outright.
+  | { store: true; status: 'approved' | 'pending' }
   | {
       store: false;
       error:
@@ -112,8 +115,8 @@ export function decideImageSafety(
 /** Safe photos are stored and published. Rejected photos are never stored. */
 export function applyPhotoScreening(decision: ImageSafetyDecision): PhotoScreeningOutcome {
   if (decision.ok) return { store: true, status: 'approved' };
+  // Only explicit content is refused. Drawings, undetected faces and
+  // classifier failures are stored but held as 'pending' for human review.
   if (decision.reason === 'explicit') return { store: false, error: 'photoRejectedExplicit' };
-  if (decision.reason === 'drawing') return { store: false, error: 'photoRejectedDrawing' };
-  if (decision.reason === 'noFace') return { store: false, error: 'photoRejectedNoFace' };
-  return { store: false, error: 'photoCheckUnavailable' };
+  return { store: true, status: 'pending' };
 }
