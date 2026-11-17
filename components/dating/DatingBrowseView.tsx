@@ -53,6 +53,10 @@ type Labels = {
   heroMeta: string;
   heroLead: string;
   heroCta: string;
+  heroFine: string;
+  lockTitle: string;
+  lockHint: string;
+  lockLogin: string;
   discoverTitle: string;
   filtersOpen: string;
   filtersTitle: string;
@@ -258,9 +262,12 @@ export function DatingBrowseView({
     });
   }
 
+  // Rounded down to tens so the "N+ more" line never overstates.
+  const remainingProfiles = Math.floor(Math.max(profileCount - profiles.length, 0) / 10) * 10;
+
   return (
     <main
-      className={`container community-page dating-page${isLocked ? ' dating-page--locked' : ''}${lockStatus ? ` dating-page--${lockStatus}` : ''}`}
+      className={`container community-page dating-page dating-page--browse${isLocked ? ' dating-page--locked' : ''}${lockStatus ? ` dating-page--${lockStatus}` : ''}`}
     >
       {user ? (
         <LocationConfirm
@@ -279,6 +286,7 @@ export function DatingBrowseView({
             meta: labels.heroMeta,
             lead: labels.heroLead,
             cta: labels.heroCta,
+            fine: labels.heroFine,
           }}
         />
       ) : null}
@@ -388,10 +396,33 @@ export function DatingBrowseView({
                   {labels.restrictionManageCta ?? labels.editProfile}
                 </Link>
               </div>
-            ) : (
+            ) : user ? (
               <Link href={createProfileHref} className="dating-blur-overlay__cta">
                 {hasDatingProfile ? labels.editProfile : labels.heroCta}
               </Link>
+            ) : (
+              /* Guests: on phones only the button shows (CSS); on desktop the
+                 whole card sits over the blurred rows. */
+              <div className="dating-lock-card">
+                <span className="dating-lock-card__icon" aria-hidden>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="5" y="11" width="14" height="9" rx="2" />
+                    <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+                  </svg>
+                </span>
+                {remainingProfiles > 0 ? (
+                  <p className="dating-lock-card__title">
+                    {labels.lockTitle.replace('{n}', String(remainingProfiles))}
+                  </p>
+                ) : null}
+                <p className="dating-lock-card__hint">{labels.lockHint}</p>
+                <Link href={createProfileHref} className="dating-blur-overlay__cta">
+                  {labels.heroCta}
+                </Link>
+                <Link href={localePath(locale, '/shesvla/')} className="dating-lock-card__login">
+                  {labels.lockLogin}
+                </Link>
+              </div>
             )}
           </div>
         ) : null}

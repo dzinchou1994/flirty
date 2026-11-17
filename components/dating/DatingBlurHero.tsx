@@ -8,6 +8,7 @@ type Labels = {
   meta: string;
   lead: string;
   cta: string;
+  fine?: string;
 };
 
 type Props = {
@@ -39,6 +40,7 @@ export function DatingBlurHero({ locale, isLoggedIn, profileCount, labels }: Pro
         <Link href={ctaHref} className="dating-hero__cta">
           {labels.cta}
         </Link>
+        {labels.fine ? <p className="dating-hero__fine">{labels.fine}</p> : null}
       </div>
     </section>
   );

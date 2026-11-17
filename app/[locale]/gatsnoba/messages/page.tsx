@@ -34,6 +34,7 @@ export default async function MessagesPage({
           labels={{
             empty: d.messagesPage.empty,
             emptyHint: d.messagesPage.emptyHint,
+            emptyCta: d.messagesPage.emptyCta,
             loading: d.messagesPage.loading,
           }}
         />

@@ -11,10 +11,12 @@ export type DatingTabBarLabels = {
   messages: string;
   profile: string;
   aria: string;
+  ctaTitle?: string;
+  ctaHint?: string;
 };
 
 type Tab = {
-  key: keyof Omit<DatingTabBarLabels, 'aria'>;
+  key: 'browse' | 'likes' | 'messages' | 'profile';
   href: string;
   /** Also active for these path prefixes. */
   match: string[];
@@ -98,19 +100,33 @@ function isActive(pathname: string, prefixes: string[], key: string): boolean {
   return true;
 }
 
-/** Mobile bottom navigation. Hidden above 640px by CSS. */
+/**
+ * Bottom navigation on phones; from 1024px the same markup is the left
+ * sidebar, which also shows the brand and (for guests) a sign-up card.
+ */
 export function DatingTabBar({
   locale,
   labels,
+  appName,
+  cta,
 }: {
   locale: Locale;
   labels: DatingTabBarLabels;
+  appName: string;
+  /** Guest sign-up card at the bottom of the desktop sidebar. */
+  cta?: { href: string; label: string } | null;
 }) {
   const pathname = usePathname() || '';
   const tabs = buildTabs(`/${locale}`, locale);
 
   return (
     <nav className="dating-tabbar" aria-label={labels.aria}>
+      <Link href={datingHomePath(locale)} className="dating-tabbar__brand">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden>
+          <path d="M12 21s-8-4.9-8-10.4A4.6 4.6 0 0 1 12 7.6a4.6 4.6 0 0 1 8 3C20 16.1 12 21 12 21z" />
+        </svg>
+        <span>{appName}</span>
+      </Link>
       {tabs.map((tab) => {
         const active = isActive(pathname, tab.match, tab.key);
         return (
@@ -125,6 +141,15 @@ export function DatingTabBar({
           </Link>
         );
       })}
+      {cta ? (
+        <div className="dating-tabbar__cta">
+          {labels.ctaTitle ? <p className="dating-tabbar__cta-title">{labels.ctaTitle}</p> : null}
+          {labels.ctaHint ? <p className="dating-tabbar__cta-hint">{labels.ctaHint}</p> : null}
+          <Link href={cta.href} className="dating-tabbar__cta-btn">
+            {cta.label}
+          </Link>
+        </div>
+      ) : null}
     </nav>
   );
 }

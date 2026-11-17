@@ -8,12 +8,12 @@
   --border-strong: rgba(255, 255, 255, 0.14);
   --text: #f0eef5;
   --text-muted: #9490a8;
-  --accent: #e8a838;
-  --accent-dim: rgba(232, 168, 56, 0.15);
-  --logo-pink: #ee2a7b;
-  --logo-pink-light: #ff6b9d;
-  --logo-pink-dim: rgba(238, 42, 123, 0.14);
-  --logo-pink-border: rgba(255, 107, 157, 0.28);
+  --accent: #ff6b35;
+  --accent-dim: rgba(255, 107, 53, 0.15);
+  --logo-pink: #ff6b35;
+  --logo-pink-light: #ff9466;
+  --logo-pink-dim: rgba(255, 107, 53, 0.14);
+  --logo-pink-border: rgba(255, 107, 53, 0.28);
   --accent-purple: #8b5cf6;
   --accent-purple-light: #a78bfa;
   --accent-purple-dim: rgba(139, 92, 246, 0.14);
@@ -83,7 +83,7 @@ button, .btn, .nav-toggle {
   background:
     linear-gradient(
       120deg,
-      rgba(238, 42, 123, 0.12) 0%,
+      rgba(255, 107, 53, 0.12) 0%,
       rgba(14, 12, 22, 0.92) 28%,
       rgba(12, 12, 20, 0.96) 62%,
       rgba(139, 92, 246, 0.1) 100%
@@ -92,7 +92,7 @@ button, .btn, .nav-toggle {
   -webkit-backdrop-filter: blur(16px) saturate(1.35);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow:
-    0 1px 0 rgba(255, 107, 157, 0.08),
+    0 1px 0 rgba(255, 107, 53, 0.08),
     0 8px 28px rgba(0, 0, 0, 0.28);
 }
 
@@ -113,8 +113,8 @@ button, .btn, .nav-toggle {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 107, 157, 0.45),
-    rgba(232, 168, 56, 0.35),
+    rgba(255, 107, 53, 0.45),
+    rgba(255, 107, 53, 0.35),
     rgba(167, 139, 250, 0.4),
     transparent
   );
@@ -366,8 +366,8 @@ button, .btn, .nav-toggle {
 
   .site-nav__link.is-active {
     color: var(--text);
-    background: rgba(232, 168, 56, 0.1);
-    border-color: rgba(232, 168, 56, 0.28);
+    background: rgba(255, 107, 53, 0.1);
+    border-color: rgba(255, 107, 53, 0.28);
   }
 
   .site-nav__link--live.is-active {
@@ -406,9 +406,9 @@ button, .btn, .nav-toggle {
   .site-nav__link--profile:hover,
   .site-nav__profile.is-active .site-nav__more-btn.site-nav__link--profile,
   .site-nav__profile:hover .site-nav__more-btn.site-nav__link--profile {
-    background: rgba(255, 107, 157, 0.1);
-    border-color: rgba(255, 107, 157, 0.28);
-    color: #ffb3cc;
+    background: rgba(255, 107, 53, 0.1);
+    border-color: rgba(255, 107, 53, 0.28);
+    color: #ffc4a8;
   }
 
   .site-nav__logout--menu {
@@ -468,8 +468,8 @@ button, .btn, .nav-toggle {
   }
 
   .site-nav__more.is-active .site-nav__more-btn {
-    background: rgba(232, 168, 56, 0.1);
-    border-color: rgba(232, 168, 56, 0.28);
+    background: rgba(255, 107, 53, 0.1);
+    border-color: rgba(255, 107, 53, 0.28);
   }
 
   .site-nav__more-caret {
@@ -675,7 +675,7 @@ button, .btn, .nav-toggle {
 .btn--primary {
   background: var(--gradient-accent);
   color: #0a0a0c;
-  box-shadow: 0 8px 32px rgba(232, 168, 56, 0.25);
+  box-shadow: 0 8px 32px rgba(255, 107, 53, 0.25);
 }
 
 .btn--ghost {
@@ -788,9 +788,9 @@ button, .btn, .nav-toggle {
   [data-stat="comments"]::before { background: linear-gradient(90deg, transparent, var(--accent), transparent); }
 
   [data-stat="stories"]:hover {
-    background: linear-gradient(145deg, rgba(238, 42, 123, 0.1) 0%, rgba(255, 255, 255, 0.018) 100%);
-    border-color: rgba(238, 42, 123, 0.28);
-    box-shadow: 0 10px 36px rgba(238, 42, 123, 0.18), 0 2px 10px rgba(0, 0, 0, 0.35);
+    background: linear-gradient(145deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 255, 255, 0.018) 100%);
+    border-color: rgba(255, 107, 53, 0.28);
+    box-shadow: 0 10px 36px rgba(255, 107, 53, 0.18), 0 2px 10px rgba(0, 0, 0, 0.35);
   }
   [data-stat="online"]:hover {
     background: linear-gradient(145deg, rgba(125, 255, 178, 0.09) 0%, rgba(255, 255, 255, 0.018) 100%);
@@ -803,9 +803,9 @@ button, .btn, .nav-toggle {
     box-shadow: 0 10px 36px rgba(139, 92, 246, 0.18), 0 2px 10px rgba(0, 0, 0, 0.35);
   }
   [data-stat="comments"]:hover {
-    background: linear-gradient(145deg, rgba(232, 168, 56, 0.1) 0%, rgba(255, 255, 255, 0.018) 100%);
-    border-color: rgba(232, 168, 56, 0.28);
-    box-shadow: 0 10px 36px rgba(232, 168, 56, 0.16), 0 2px 10px rgba(0, 0, 0, 0.35);
+    background: linear-gradient(145deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 255, 255, 0.018) 100%);
+    border-color: rgba(255, 107, 53, 0.28);
+    box-shadow: 0 10px 36px rgba(255, 107, 53, 0.16), 0 2px 10px rgba(0, 0, 0, 0.35);
   }
 
   .hero__stat-card-icon {
@@ -828,9 +828,9 @@ button, .btn, .nav-toggle {
 
   /* Per-stat icon tints */
   [data-stat="stories"] .hero__stat-card-icon {
-    background: rgba(238, 42, 123, 0.13);
-    border-color: rgba(238, 42, 123, 0.26);
-    box-shadow: 0 0 12px rgba(238, 42, 123, 0.12);
+    background: rgba(255, 107, 53, 0.13);
+    border-color: rgba(255, 107, 53, 0.26);
+    box-shadow: 0 0 12px rgba(255, 107, 53, 0.12);
   }
   [data-stat="online"] .hero__stat-card-icon {
     background: rgba(125, 255, 178, 0.12);
@@ -846,9 +846,9 @@ button, .btn, .nav-toggle {
     box-shadow: 0 0 12px rgba(139, 92, 246, 0.12);
   }
   [data-stat="comments"] .hero__stat-card-icon {
-    background: rgba(232, 168, 56, 0.13);
-    border-color: rgba(232, 168, 56, 0.26);
-    box-shadow: 0 0 12px rgba(232, 168, 56, 0.12);
+    background: rgba(255, 107, 53, 0.13);
+    border-color: rgba(255, 107, 53, 0.26);
+    box-shadow: 0 0 12px rgba(255, 107, 53, 0.12);
   }
 
   .hero__stat-card-body {
@@ -1114,7 +1114,7 @@ button, .btn, .nav-toggle {
   padding: 0;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 90% 55% at 100% -10%, rgba(238, 42, 123, 0.22), transparent 58%),
+    radial-gradient(ellipse 90% 55% at 100% -10%, rgba(255, 107, 53, 0.22), transparent 58%),
     radial-gradient(ellipse 80% 50% at -10% 110%, rgba(139, 92, 246, 0.18), transparent 55%),
     linear-gradient(180deg, #0c0b14 0%, #07070c 46%, #050508 100%);
   border-bottom: none;
@@ -1158,7 +1158,7 @@ button, .btn, .nav-toggle {
   -webkit-overflow-scrolling: touch;
   padding: calc(var(--header-h) + 0.85rem) 1.15rem calc(6.25rem + var(--safe-bottom));
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 107, 157, 0.7) transparent;
+  scrollbar-color: rgba(255, 107, 53, 0.7) transparent;
 }
 
 .site-header--compact-nav .site-nav__mobile::-webkit-scrollbar {
@@ -1170,7 +1170,7 @@ button, .btn, .nav-toggle {
 }
 
 .site-header--compact-nav .site-nav__mobile::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #ff6b9d, #8b5cf6);
+  background: linear-gradient(180deg, #ff9466, #8b5cf6);
   border-radius: 999px;
 }
 
@@ -1221,7 +1221,7 @@ button, .btn, .nav-toggle {
 }
 
 a.site-nav__mobile-user:active .site-nav__mobile-user-name {
-  color: #ffb3cc;
+  color: #ffc4a8;
 }
 
 .site-nav__mobile-guest {
@@ -1231,7 +1231,7 @@ a.site-nav__mobile-user:active .site-nav__mobile-user-name {
   padding: 1.1rem 1.15rem;
   border-radius: 22px;
   background:
-    linear-gradient(160deg, rgba(255, 107, 157, 0.16) 0%, rgba(255, 255, 255, 0.03) 46%, rgba(139, 92, 246, 0.12) 100%);
+    linear-gradient(160deg, rgba(255, 107, 53, 0.16) 0%, rgba(255, 255, 255, 0.03) 46%, rgba(139, 92, 246, 0.12) 100%);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
@@ -1278,12 +1278,12 @@ a.site-nav__mobile-user:active .site-nav__mobile-user-name {
   color: #0a0a0c;
   background: var(--gradient-accent);
   border: 1px solid transparent;
-  box-shadow: 0 8px 22px rgba(232, 168, 56, 0.32);
+  box-shadow: 0 8px 22px rgba(255, 107, 53, 0.32);
 }
 
 .site-nav__mobile-auth-btn--register:active {
   transform: translateY(-1px);
-  box-shadow: 0 10px 26px rgba(232, 168, 56, 0.4);
+  box-shadow: 0 10px 26px rgba(255, 107, 53, 0.4);
 }
 
 .site-nav__mobile-primary {
@@ -1307,10 +1307,10 @@ a.site-nav__mobile-user:active .site-nav__mobile-user-name {
 }
 
 .site-nav__mobile-primary .site-nav__link.is-active {
-  background: linear-gradient(135deg, rgba(238, 42, 123, 0.2), rgba(139, 92, 246, 0.16));
-  border-color: rgba(255, 107, 157, 0.38);
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(139, 92, 246, 0.16));
+  border-color: rgba(255, 107, 53, 0.38);
   color: var(--text);
-  box-shadow: 0 10px 28px rgba(238, 42, 123, 0.16);
+  box-shadow: 0 10px 28px rgba(255, 107, 53, 0.16);
 }
 
 .site-nav__mobile-groups {
@@ -1375,7 +1375,7 @@ a.site-nav__mobile-user:active .site-nav__mobile-user-name {
   padding: 0.95rem 0.9rem 0.8rem;
   border-radius: 22px;
   background:
-    radial-gradient(ellipse 90% 70% at 0% 0%, rgba(255, 107, 157, 0.16), transparent 55%),
+    radial-gradient(ellipse 90% 70% at 0% 0%, rgba(255, 107, 53, 0.16), transparent 55%),
     radial-gradient(ellipse 80% 60% at 100% 100%, rgba(139, 92, 246, 0.14), transparent 50%),
     linear-gradient(165deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1407,7 +1407,7 @@ a.site-nav__mobile-user:active .site-nav__mobile-user-name {
 }
 
 .site-nav__mobile-profile-card.is-premium {
-  border-bottom-color: rgba(232, 168, 56, 0.22);
+  border-bottom-color: rgba(255, 107, 53, 0.22);
 }
 
 .site-nav__mobile-profile-meta {
@@ -1471,8 +1471,8 @@ a.site-nav__mobile-user:active .site-nav__mobile-user-name {
 
 .site-nav__mobile-quick-link.is-active {
   color: var(--logo-pink-light);
-  border-color: rgba(255, 107, 157, 0.35);
-  background: rgba(238, 42, 123, 0.12);
+  border-color: rgba(255, 107, 53, 0.35);
+  background: rgba(255, 107, 53, 0.12);
 }
 
 .site-nav__mobile-quick-icon {
@@ -1483,11 +1483,11 @@ a.site-nav__mobile-user:active .site-nav__mobile-user-name {
   flex-shrink: 0;
   border-radius: 10px;
   color: var(--logo-pink-light);
-  background: rgba(238, 42, 123, 0.12);
+  background: rgba(255, 107, 53, 0.12);
 }
 
 .site-nav__mobile-quick-link.is-active .site-nav__mobile-quick-icon {
-  background: rgba(238, 42, 123, 0.22);
+  background: rgba(255, 107, 53, 0.22);
 }
 
 .site-nav__mobile-quick-svg {
@@ -1531,7 +1531,7 @@ a.site-nav__mobile-user:active .site-nav__mobile-user-name {
 }
 
 .site-nav__mobile-logout:active {
-  color: #ff8aa8;
+  color: #ff9466;
 }
 
 .site-nav__medals-link {
@@ -1612,11 +1612,11 @@ a.site-nav__mobile-user:active .site-nav__mobile-user-name {
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 999px;
   background:
-    radial-gradient(circle at 50% 40%, rgba(255, 107, 157, 0.35), rgba(12, 12, 20, 0.92) 70%);
+    radial-gradient(circle at 50% 40%, rgba(255, 107, 53, 0.35), rgba(12, 12, 20, 0.92) 70%);
   box-shadow:
-    0 0 0 6px rgba(238, 42, 123, 0.12),
+    0 0 0 6px rgba(255, 107, 53, 0.12),
     0 10px 28px rgba(0, 0, 0, 0.45),
-    0 0 24px rgba(238, 42, 123, 0.28);
+    0 0 24px rgba(255, 107, 53, 0.28);
   cursor: pointer;
 }
 
@@ -1664,7 +1664,7 @@ body.nav-menu-open .bottom-nav {
     padding: 0;
     overflow: hidden;
     background:
-      radial-gradient(ellipse 90% 55% at 100% -10%, rgba(238, 42, 123, 0.22), transparent 58%),
+      radial-gradient(ellipse 90% 55% at 100% -10%, rgba(255, 107, 53, 0.22), transparent 58%),
       radial-gradient(ellipse 80% 50% at -10% 110%, rgba(139, 92, 246, 0.18), transparent 55%),
       linear-gradient(180deg, #0c0b14 0%, #07070c 46%, #050508 100%);
     border-bottom: none;
@@ -1706,7 +1706,7 @@ body.nav-menu-open .bottom-nav {
     -webkit-overflow-scrolling: touch;
     padding: calc(var(--header-h) + 0.85rem) 1.15rem calc(6.25rem + var(--safe-bottom));
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 107, 157, 0.7) transparent;
+    scrollbar-color: rgba(255, 107, 53, 0.7) transparent;
   }
 
   .lang-switcher {
@@ -1822,13 +1822,13 @@ body.nav-menu-open .bottom-nav {
   font-weight: 800;
   letter-spacing: 0.015em;
   color: #fff;
-  background: linear-gradient(118deg, #ff4a86 0%, #ee2a7b 48%, #a8005c 100%);
+  background: linear-gradient(118deg, #ff9466 0%, #ff6b35 48%, #c2410c 100%);
   border: 1px solid rgba(255, 186, 214, 0.45);
-  box-shadow: 0 8px 26px rgba(238, 42, 123, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  box-shadow: 0 8px 26px rgba(255, 107, 53, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .forum-hub__guest-invite-actions .btn--primary:hover {
-  box-shadow: 0 12px 34px rgba(238, 42, 123, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  box-shadow: 0 12px 34px rgba(255, 107, 53, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 .forum-hub__guest-invite-actions .btn--ghost {
@@ -1841,9 +1841,9 @@ body.nav-menu-open .bottom-nav {
 
 .forum-hub__guest-invite-actions .btn--ghost:hover {
   color: #fff3d8;
-  background: rgba(232, 168, 56, 0.12);
+  background: rgba(255, 107, 53, 0.12);
   border-color: rgba(255, 206, 122, 0.55);
-  box-shadow: 0 8px 24px rgba(232, 168, 56, 0.22);
+  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.22);
 }
 
 @media (max-width: 719px) {
@@ -1916,16 +1916,16 @@ body.nav-menu-open .bottom-nav {
 }
 
 .forum-chip:hover {
-  border-color: rgba(232, 168, 56, 0.45);
-  box-shadow: 0 0 16px rgba(232, 168, 56, 0.12);
+  border-color: rgba(255, 107, 53, 0.45);
+  box-shadow: 0 0 16px rgba(255, 107, 53, 0.12);
   transform: translateY(-1px);
   color: var(--text);
 }
 
 .forum-chip.is-active {
   border-color: var(--accent);
-  background: rgba(232, 168, 56, 0.1);
-  box-shadow: 0 0 12px rgba(232, 168, 56, 0.15);
+  background: rgba(255, 107, 53, 0.1);
+  box-shadow: 0 0 12px rgba(255, 107, 53, 0.15);
 }
 
 /* Category tiles - home grid */
@@ -1942,10 +1942,10 @@ body.nav-menu-open .bottom-nav {
 }
 
 .forum-chips .forum-chip:hover {
-  border-color: rgba(232, 168, 56, 0.4);
+  border-color: rgba(255, 107, 53, 0.4);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   transform: translateY(-2px);
-  background: linear-gradient(155deg, rgba(232, 168, 56, 0.08), rgba(255, 255, 255, 0.03));
+  background: linear-gradient(155deg, rgba(255, 107, 53, 0.08), rgba(255, 255, 255, 0.03));
 }
 
 .forum-chips .forum-chip:active {
@@ -2010,8 +2010,8 @@ body.nav-menu-open .bottom-nav {
 .community-sidebar__list--users a { display: flex; align-items: center; gap: 0.5rem; }
 
 .dating-restriction-banner--pending {
-  border-color: rgba(232, 168, 56, 0.4);
-  background: linear-gradient(145deg, rgba(232, 168, 56, 0.16), rgba(255, 255, 255, 0.03));
+  border-color: rgba(255, 107, 53, 0.4);
+  background: linear-gradient(145deg, rgba(255, 107, 53, 0.16), rgba(255, 255, 255, 0.03));
 }
 
 .reddit-comment-auth__actions .btn {
@@ -2032,8 +2032,8 @@ body:has(.messages-page-root) {
     linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
     radial-gradient(circle at 8% 25%, rgba(139, 92, 246, 0.24), transparent 28%),
-    radial-gradient(circle at 92% 72%, rgba(238, 42, 123, 0.2), transparent 30%),
-    radial-gradient(circle at 50% 110%, rgba(232, 168, 56, 0.08), transparent 36%),
+    radial-gradient(circle at 92% 72%, rgba(255, 107, 53, 0.2), transparent 30%),
+    radial-gradient(circle at 50% 110%, rgba(255, 107, 53, 0.08), transparent 36%),
     #0b0b10;
   background-size: 54px 54px, 54px 54px, auto, auto, auto, auto;
 }
@@ -2258,7 +2258,7 @@ body:has(.messages-page-root) .scroll-to-top {
 
 .community-auth-lock__actions .btn--primary {
   background: linear-gradient(135deg, var(--logo-pink), #c81b69);
-  box-shadow: 0 8px 25px rgba(238, 42, 123, 0.28);
+  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.28);
 }
 
 @media (max-width: 540px) {
@@ -2319,7 +2319,7 @@ body:has(.messages-page-root) .scroll-to-top {
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  background: rgba(238, 42, 123, 0.12);
+  background: rgba(255, 107, 53, 0.12);
   color: var(--logo-pink-light);
   font-size: 1.25rem;
 }
@@ -2573,7 +2573,7 @@ body:has(.messages-page-root) .scroll-to-top {
 .dating-mode-tabs__tab.is-active {
   color: #08080c;
   background: var(--accent);
-  box-shadow: 0 2px 10px rgba(232, 168, 56, 0.28);
+  box-shadow: 0 2px 10px rgba(255, 107, 53, 0.28);
 }
 
 .dating-mode-tabs__tab--lgbt.is-active {
@@ -2728,8 +2728,8 @@ body:has(.messages-page-root) .scroll-to-top {
 
 .dating-how-btn:hover {
   color: var(--text, #fff);
-  border-color: rgba(232, 168, 56, 0.4);
-  background: rgba(232, 168, 56, 0.08);
+  border-color: rgba(255, 107, 53, 0.4);
+  background: rgba(255, 107, 53, 0.08);
 }
 
 .dating-page__filters {
@@ -2820,7 +2820,7 @@ body:has(.messages-page-root) .scroll-to-top {
   font-size: 0.72rem;
   font-weight: 700;
   color: #1a1410;
-  background: linear-gradient(145deg, #f0c56d, #e8a838);
+  background: linear-gradient(145deg, #ff9466, #ff6b35);
 }
 
 .dating-empty {
@@ -2898,8 +2898,8 @@ body:has(.messages-page-root) .scroll-to-top {
 
 .dating-card-wrap:focus-within .dating-card {
   transform: translateY(-4px) scale(1.01);
-  border-color: rgba(232, 168, 56, 0.5);
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(232, 168, 56, 0.12);
+  border-color: rgba(255, 107, 53, 0.5);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(255, 107, 53, 0.12);
 }
 
 .dating-card-wrap:focus-within .dating-card__image {
@@ -2950,7 +2950,7 @@ body:has(.messages-page-root) .scroll-to-top {
   gap: 0.85rem;
   padding: 1.5rem;
   background:
-    radial-gradient(ellipse at 50% 34%, rgba(232, 168, 56, 0.26), transparent 58%),
+    radial-gradient(ellipse at 50% 34%, rgba(255, 107, 53, 0.26), transparent 58%),
     linear-gradient(160deg, #1a1410 0%, #2a1c18 48%, #3a2418 100%);
   overflow: hidden;
 }
@@ -2981,7 +2981,7 @@ body:has(.messages-page-root) .scroll-to-top {
   letter-spacing: 0.22em;
   color: #f6e6c8;
   background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(232, 168, 56, 0.45);
+  border: 1px solid rgba(255, 107, 53, 0.45);
 }
 
 .dating-card__no-photo-sub {
@@ -3106,15 +3106,15 @@ body:has(.messages-page-root) .scroll-to-top {
 
 .dating-like-btn:hover:not(:disabled) {
   transform: scale(1.08);
-  border-color: rgba(238, 42, 123, 0.55);
-  color: #ff6b9d;
+  border-color: rgba(255, 107, 53, 0.55);
+  color: #ff9466;
 }
 
 .dating-like-btn.is-liked {
-  background: linear-gradient(135deg, #ee2a7b, #ff6b9d);
+  background: linear-gradient(135deg, #ff6b35, #ff9466);
   border-color: transparent;
   color: #fff;
-  box-shadow: 0 8px 22px rgba(238, 42, 123, 0.4);
+  box-shadow: 0 8px 22px rgba(255, 107, 53, 0.4);
   animation: dating-like-pop 0.35s ease;
 }
 
@@ -3204,7 +3204,7 @@ body:has(.messages-page-root) .scroll-to-top {
   color: #0a0a0c;
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 12px 36px rgba(232, 168, 56, 0.35);
+  box-shadow: 0 12px 36px rgba(255, 107, 53, 0.35);
 }
 
 .dating-blur-overlay__panel {
@@ -3228,7 +3228,7 @@ body:has(.messages-page-root) .scroll-to-top {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #0a0a0c;
-  background: #e8a838;
+  background: #ff6b35;
 }
 
 .dating-blur-overlay__badge--rejected {
@@ -3289,8 +3289,8 @@ body:has(.messages-page-root) .scroll-to-top {
   border-radius: 22px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background:
-    radial-gradient(ellipse at 20% 20%, rgba(238, 42, 123, 0.22), transparent 45%),
-    radial-gradient(ellipse at 80% 10%, rgba(232, 168, 56, 0.18), transparent 40%),
+    radial-gradient(ellipse at 20% 20%, rgba(255, 107, 53, 0.22), transparent 45%),
+    radial-gradient(ellipse at 80% 10%, rgba(255, 107, 53, 0.18), transparent 40%),
     radial-gradient(ellipse at 70% 80%, rgba(139, 92, 246, 0.18), transparent 45%),
     linear-gradient(160deg, #121018 0%, #0c0c12 55%, #100e16 100%);
   padding: 1.6rem 1.25rem 1.4rem;
@@ -3308,7 +3308,7 @@ body:has(.messages-page-root) .scroll-to-top {
   height: 220px;
   top: -60px;
   left: -40px;
-  background: rgba(238, 42, 123, 0.28);
+  background: rgba(255, 107, 53, 0.28);
 }
 
 .dating-hero__glow--b {
@@ -3316,7 +3316,7 @@ body:has(.messages-page-root) .scroll-to-top {
   height: 260px;
   right: -50px;
   bottom: -80px;
-  background: rgba(232, 168, 56, 0.2);
+  background: rgba(255, 107, 53, 0.2);
 }
 
 .dating-hero__hearts {
@@ -3328,14 +3328,14 @@ body:has(.messages-page-root) .scroll-to-top {
 
 .dating-hero__heart {
   position: absolute;
-  color: rgba(255, 107, 157, 0.35);
+  color: rgba(255, 107, 53, 0.35);
   font-size: 1.4rem;
   animation: dating-float-heart 7s ease-in-out infinite;
 }
 
 .dating-hero__heart--1 { left: 8%; top: 22%; animation-delay: 0s; }
 
-.dating-hero__heart--2 { left: 78%; top: 18%; font-size: 1.1rem; animation-delay: 1.2s; color: rgba(232, 168, 56, 0.35); }
+.dating-hero__heart--2 { left: 78%; top: 18%; font-size: 1.1rem; animation-delay: 1.2s; color: rgba(255, 107, 53, 0.35); }
 
 .dating-hero__heart--3 { left: 62%; top: 68%; font-size: 1.6rem; animation-delay: 2.1s; }
 
@@ -3377,7 +3377,7 @@ body:has(.messages-page-root) .scroll-to-top {
   font-family: var(--font-display);
   font-size: clamp(1.7rem, 4vw, 2.35rem);
   line-height: 1.15;
-  background: linear-gradient(120deg, #fff 10%, #ffb4d0 45%, #f3c76b 90%);
+  background: linear-gradient(120deg, #fff 10%, #ffc4a8 45%, #f3c76b 90%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -3446,7 +3446,7 @@ body:has(.messages-page-root) .scroll-to-top {
   max-width: 100%;
   border-radius: 999px;
   font-size: 1.02rem;
-  box-shadow: 0 12px 34px rgba(232, 168, 56, 0.35);
+  box-shadow: 0 12px 34px rgba(255, 107, 53, 0.35);
 }
 
 .dating-hero__lock {
@@ -3478,7 +3478,7 @@ body:has(.messages-page-root) .scroll-to-top {
   padding: 1.75rem 1.35rem 1.35rem;
   border-radius: 22px;
   background:
-    radial-gradient(circle at 50% 0%, rgba(238, 42, 123, 0.28), transparent 55%),
+    radial-gradient(circle at 50% 0%, rgba(255, 107, 53, 0.28), transparent 55%),
     var(--bg-card);
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: var(--shadow);
@@ -3538,21 +3538,21 @@ body:has(.messages-page-root) .scroll-to-top {
   margin-bottom: 0.85rem;
   padding: 0.85rem 1rem;
   border-radius: 12px;
-  border: 1px solid rgba(238, 42, 123, 0.35);
-  background: rgba(238, 42, 123, 0.12);
-  color: #ffd0e2;
+  border: 1px solid rgba(255, 107, 53, 0.35);
+  background: rgba(255, 107, 53, 0.12);
+  color: #ffc4a8;
   font-size: 0.92rem;
   line-height: 1.45;
 }
 
 .dating-editor__photos-section--required {
-  border-color: rgba(238, 42, 123, 0.45);
-  box-shadow: 0 0 0 1px rgba(238, 42, 123, 0.18);
+  border-color: rgba(255, 107, 53, 0.45);
+  box-shadow: 0 0 0 1px rgba(255, 107, 53, 0.18);
 }
 
 .dating-editor__photos-section--required .dating-editor__add {
-  border-color: rgba(238, 42, 123, 0.55);
-  background: rgba(238, 42, 123, 0.08);
+  border-color: rgba(255, 107, 53, 0.55);
+  background: rgba(255, 107, 53, 0.08);
 }
 
 .dating-empty__icon {
@@ -3564,8 +3564,8 @@ body:has(.messages-page-root) .scroll-to-top {
   place-items: center;
   font-size: 1.4rem;
   color: var(--logo-pink-light);
-  background: rgba(238, 42, 123, 0.12);
-  border: 1px solid rgba(238, 42, 123, 0.28);
+  background: rgba(255, 107, 53, 0.12);
+  border: 1px solid rgba(255, 107, 53, 0.28);
 }
 
 .dating-editor__photos-section {
@@ -3626,7 +3626,7 @@ body:has(.messages-page-root) .scroll-to-top {
 
 .dating-editor__photo--primary {
   border-color: var(--accent);
-  box-shadow: 0 0 0 1px rgba(232, 168, 56, 0.35), var(--shadow-sm);
+  box-shadow: 0 0 0 1px rgba(255, 107, 53, 0.35), var(--shadow-sm);
 }
 
 .dating-editor__photo--selectable {
@@ -3682,7 +3682,7 @@ body:has(.messages-page-root) .scroll-to-top {
   padding: 0.22rem 0.5rem;
   border-radius: 999px;
   background: rgba(8, 8, 12, 0.78);
-  border: 1px solid rgba(232, 168, 56, 0.55);
+  border: 1px solid rgba(255, 107, 53, 0.55);
   color: var(--accent);
   font-size: 0.68rem;
   font-weight: 650;
@@ -3698,11 +3698,11 @@ body:has(.messages-page-root) .scroll-to-top {
 
 .dating-editor__photo--review {
   opacity: 0.95;
-  border-color: rgba(232, 168, 56, 0.55);
+  border-color: rgba(255, 107, 53, 0.55);
 }
 
 .dating-editor__badge--review {
-  border-color: rgba(232, 168, 56, 0.7);
+  border-color: rgba(255, 107, 53, 0.7);
   color: var(--accent);
   background: rgba(8, 8, 12, 0.86);
   text-transform: none;
@@ -3738,7 +3738,7 @@ body:has(.messages-page-root) .scroll-to-top {
 
 .dating-editor__photo--selectable:hover .dating-editor__set-primary {
   background: var(--accent-dim);
-  border-color: rgba(232, 168, 56, 0.45);
+  border-color: rgba(255, 107, 53, 0.45);
   color: var(--accent);
 }
 
@@ -3782,7 +3782,7 @@ body:has(.messages-page-root) .scroll-to-top {
   border-radius: var(--radius-sm, 10px);
   border: 1.5px dashed rgba(255, 255, 255, 0.18);
   background:
-    linear-gradient(180deg, rgba(232, 168, 56, 0.06), transparent 55%),
+    linear-gradient(180deg, rgba(255, 107, 53, 0.06), transparent 55%),
     var(--bg-elevated);
   color: var(--text-muted);
   cursor: pointer;
@@ -3792,11 +3792,11 @@ body:has(.messages-page-root) .scroll-to-top {
 }
 
 .dating-editor__add:hover {
-  border-color: rgba(232, 168, 56, 0.55);
+  border-color: rgba(255, 107, 53, 0.55);
   color: var(--text);
   transform: translateY(-2px);
   background:
-    linear-gradient(180deg, rgba(232, 168, 56, 0.12), transparent 55%),
+    linear-gradient(180deg, rgba(255, 107, 53, 0.12), transparent 55%),
     var(--bg-elevated);
 }
 
@@ -3840,11 +3840,11 @@ body:has(.messages-page-root) .scroll-to-top {
   font-weight: 700;
   line-height: 1;
   vertical-align: 0.05em;
-  background: linear-gradient(135deg, #f0c14b 0%, #e8a838 45%, #ff6b9d 100%);
+  background: linear-gradient(135deg, #f0c14b 0%, #ff6b35 45%, #ff9466 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  text-shadow: 0 0 18px rgba(232, 168, 56, 0.35);
+  text-shadow: 0 0 18px rgba(255, 107, 53, 0.35);
 }
 
 .dating-interests {
@@ -3900,7 +3900,7 @@ body:has(.messages-page-root) .scroll-to-top {
 }
 
 .dating-interests__toggle.is-open {
-  border-color: rgba(232, 168, 56, 0.45);
+  border-color: rgba(255, 107, 53, 0.45);
 }
 
 .dating-interests__chevron {
@@ -3940,12 +3940,12 @@ body:has(.messages-page-root) .scroll-to-top {
 }
 
 .dating-interest-chip:hover:not(:disabled) {
-  border-color: rgba(232, 168, 56, 0.45);
+  border-color: rgba(255, 107, 53, 0.45);
 }
 
 .dating-interest-chip.is-selected {
-  background: rgba(232, 168, 56, 0.16);
-  border-color: rgba(232, 168, 56, 0.55);
+  background: rgba(255, 107, 53, 0.16);
+  border-color: rgba(255, 107, 53, 0.55);
   color: #ffe3ad;
   font-weight: 600;
 }
@@ -3991,8 +3991,8 @@ body:has(.messages-page-root) .scroll-to-top {
   margin: 0 0 1rem;
   padding: 1rem 1.15rem;
   border-radius: 14px;
-  border: 1px solid rgba(232, 168, 56, 0.35);
-  background: linear-gradient(145deg, rgba(232, 168, 56, 0.14), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 107, 53, 0.35);
+  background: linear-gradient(145deg, rgba(255, 107, 53, 0.14), rgba(255, 255, 255, 0.03));
 }
 
 .dating-restriction-banner--blocked {
@@ -4024,7 +4024,7 @@ body:has(.messages-page-root) .scroll-to-top {
   margin-top: 0.7rem;
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--accent, #e8a838);
+  color: var(--accent, #ff6b35);
   text-decoration: none;
 }
 
@@ -4192,8 +4192,8 @@ body:has(.messages-page-root) .scroll-to-top {
 }
 
 .auth-layout .community-form .btn--primary {
-  background: linear-gradient(135deg, rgba(232,168,56,0.65) 0%, rgba(200,100,40,0.65) 100%);
-  box-shadow: 0 4px 16px rgba(232, 168, 56, 0.12);
+  background: linear-gradient(135deg, rgba(255, 107, 53,0.65) 0%, rgba(200,100,40,0.65) 100%);
+  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.12);
   color: rgba(255,255,255,0.9);
 }
 
@@ -4216,7 +4216,7 @@ body:has(.messages-page-root) .scroll-to-top {
   font-weight: 700;
   line-height: 1;
   color: #1a1208;
-  background: linear-gradient(135deg, #e8a838, #f0624d);
+  background: linear-gradient(135deg, #ff6b35, #f0624d);
   vertical-align: middle;
 }
 
@@ -4260,22 +4260,22 @@ body:has(.messages-page-root) .scroll-to-top {
 }
 
 .site-nav__account.is-active .site-nav__account-chip {
-  border-color: rgba(255, 107, 157, 0.35);
+  border-color: rgba(255, 107, 53, 0.35);
   background:
-    linear-gradient(135deg, rgba(255, 107, 157, 0.14), rgba(232, 168, 56, 0.08));
-  box-shadow: 0 0 0 1px rgba(255, 107, 157, 0.08), 0 8px 22px rgba(0, 0, 0, 0.25);
+    linear-gradient(135deg, rgba(255, 107, 53, 0.14), rgba(255, 107, 53, 0.08));
+  box-shadow: 0 0 0 1px rgba(255, 107, 53, 0.08), 0 8px 22px rgba(0, 0, 0, 0.25);
 }
 
 .site-nav__account.is-premium .site-nav__account-chip {
-  border-color: rgba(232, 168, 56, 0.42);
+  border-color: rgba(255, 107, 53, 0.42);
   background:
-    linear-gradient(135deg, rgba(232, 168, 56, 0.16), rgba(238, 42, 123, 0.08));
+    linear-gradient(135deg, rgba(255, 107, 53, 0.16), rgba(255, 107, 53, 0.08));
 }
 
 .site-nav__account.is-premium:focus-within .site-nav__account-chip {
   box-shadow:
-    0 0 0 1px rgba(232, 168, 56, 0.2),
-    0 0 24px rgba(232, 168, 56, 0.18),
+    0 0 0 1px rgba(255, 107, 53, 0.2),
+    0 0 24px rgba(255, 107, 53, 0.18),
     0 8px 22px rgba(0, 0, 0, 0.28);
 }
 
@@ -4290,8 +4290,8 @@ body:has(.messages-page-root) .scroll-to-top {
 }
 
 .site-nav__account-avatar.is-premium {
-  background: linear-gradient(135deg, #ffe6a8, #e8a838 45%, #ee2a7b);
-  box-shadow: 0 0 12px rgba(232, 168, 56, 0.35);
+  background: linear-gradient(135deg, #ffe6a8, #ff6b35 45%, #ff6b35);
+  box-shadow: 0 0 12px rgba(255, 107, 53, 0.35);
   animation: site-nav-premium-ring 3.2s ease-in-out infinite;
 }
 
@@ -4322,7 +4322,7 @@ body:has(.messages-page-root) .scroll-to-top {
   font-size: 0.55rem;
   line-height: 1;
   color: #1a1208;
-  background: linear-gradient(135deg, #ffe6a8, #e8a838);
+  background: linear-gradient(135deg, #ffe6a8, #ff6b35);
   border: 1.5px solid #12121a;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
@@ -4359,8 +4359,8 @@ body:has(.messages-page-root) .scroll-to-top {
   margin-top: 0.2rem;
   padding: 0.12rem 0.45rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(232, 168, 56, 0.25), rgba(238, 42, 123, 0.18));
-  border: 1px solid rgba(232, 168, 56, 0.35);
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.25), rgba(255, 107, 53, 0.18));
+  border: 1px solid rgba(255, 107, 53, 0.35);
 }
 
 .site-nav__account-caret {
@@ -4382,7 +4382,7 @@ body:has(.messages-page-root) .scroll-to-top {
   padding: 0.65rem 0.7rem;
   border-radius: 12px;
   background:
-    radial-gradient(circle at 20% 0%, rgba(232, 168, 56, 0.16), transparent 55%),
+    radial-gradient(circle at 20% 0%, rgba(255, 107, 53, 0.16), transparent 55%),
     rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
@@ -4433,7 +4433,7 @@ body:has(.messages-page-root) .scroll-to-top {
   --medal-gold-glow: rgba(255, 215, 0, 0.35);
   --medal-bronze: #CD7F32;
   --medal-locked: rgba(255, 255, 255, 0.08);
-  --medal-gradient: linear-gradient(135deg, #ee2a7b, #e8a838, #8b5cf6);
+  --medal-gradient: linear-gradient(135deg, #ff6b35, #ff6b35, #8b5cf6);
   --medal-fire: linear-gradient(135deg, #ff4500, #ff8c00, #ffd700);
 }
 
@@ -5004,7 +5004,7 @@ body:has(.messages-page-root) .scroll-to-top {
   width: 26px;
   height: 2px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #f0624d, #e8a838);
+  background: linear-gradient(90deg, #f0624d, #ff6b35);
 }
 
 .dating-tabbar__icon {
@@ -5014,7 +5014,7 @@ body:has(.messages-page-root) .scroll-to-top {
 }
 
 .dating-tabbar__item.is-active .dating-tabbar__icon {
-  stroke: #e8a838;
+  stroke: #ff6b35;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -5061,7 +5061,7 @@ body:has(.messages-page-root) .scroll-to-top {
 }
 
 .dating-segmented__btn.is-active {
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
   color: #140f0a;
 }
 
@@ -5126,7 +5126,7 @@ body:has(.messages-page-root) .scroll-to-top {
   font-weight: 650;
   text-decoration: none;
   color: #140f0a;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
 }
 
 .dating-likes__status,
@@ -5303,7 +5303,7 @@ body:has(.messages-page-root) .scroll-to-top {
 .dating-bubble--mine {
   align-self: flex-end;
   border-radius: 18px 18px 5px 18px;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
   color: #140f0a;
 }
 
@@ -5347,7 +5347,7 @@ body:has(.messages-page-root) .scroll-to-top {
 
 .dating-composer__input:focus {
   outline: none;
-  border-color: rgba(232, 168, 56, 0.5);
+  border-color: rgba(255, 107, 53, 0.5);
 }
 
 .dating-composer__send {
@@ -5357,7 +5357,7 @@ body:has(.messages-page-root) .scroll-to-top {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
   color: #140f0a;
   cursor: pointer;
 }
@@ -5394,7 +5394,7 @@ body:has(.dating-thread-page) .dating-tabbar {
   pointer-events: none;
   background:
     radial-gradient(ellipse at 30% 40%, rgba(240, 98, 77, 0.22), transparent 62%),
-    radial-gradient(ellipse at 72% 30%, rgba(232, 168, 56, 0.16), transparent 58%);
+    radial-gradient(ellipse at 72% 30%, rgba(255, 107, 53, 0.16), transparent 58%);
   filter: blur(14px);
 }
 
@@ -5426,7 +5426,7 @@ body:has(.dating-thread-page) .dating-tabbar {
   height: 42px;
   border-radius: 13px;
   color: #fff;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
   box-shadow: 0 10px 26px rgba(240, 98, 77, 0.35);
 }
 
@@ -5480,7 +5480,7 @@ body:has(.dating-thread-page) .dating-tabbar {
 }
 
 .auth-tabs__btn.is-active {
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
   color: #140f0a;
 }
 
@@ -5548,7 +5548,7 @@ body:has(.dating-thread-page) .dating-tabbar {
 
 .auth-input:focus {
   outline: none;
-  border-color: rgba(232, 168, 56, 0.6);
+  border-color: rgba(255, 107, 53, 0.6);
   background: rgba(255, 255, 255, 0.07);
 }
 
@@ -5615,13 +5615,13 @@ body:has(.dating-thread-page) .dating-tabbar {
 }
 
 .auth-check input:checked + .auth-check__box {
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
   border-color: transparent;
   color: #140f0a;
 }
 
 .auth-check input:focus-visible + .auth-check__box {
-  box-shadow: 0 0 0 3px rgba(232, 168, 56, 0.35);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.35);
 }
 
 .auth-check__text {
@@ -5723,7 +5723,7 @@ body:has(.dating-thread-page) .dating-tabbar {
   font-size: 1rem;
   font-weight: 750;
   color: #140f0a;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
   box-shadow: 0 12px 30px rgba(240, 98, 77, 0.3);
   cursor: pointer;
   transition: transform 0.12s ease, box-shadow 0.2s ease, opacity 0.2s ease;
@@ -5763,7 +5763,7 @@ body:has(.dating-thread-page) .dating-tabbar {
   padding: 0;
   font: inherit;
   font-weight: 700;
-  color: #e8a838;
+  color: #ff6b35;
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -5942,7 +5942,7 @@ body:has(.pprofile--guest) .dating-tabbar {
 .dating-album__add-plus {
   font-size: 1.55rem;
   line-height: 1;
-  color: #e8a838;
+  color: #ff6b35;
 }
 
 .dating-album__empty {
@@ -6031,7 +6031,7 @@ body:has(.pprofile--guest) .dating-tabbar {
 }
 
 .dating-album__peer.is-granted {
-  background: rgba(232, 168, 56, 0.08);
+  background: rgba(255, 107, 53, 0.08);
 }
 
 .dating-album__peer-avatar {
@@ -6041,7 +6041,7 @@ body:has(.pprofile--guest) .dating-tabbar {
   overflow: hidden;
   display: grid;
   place-items: center;
-  background: rgba(232, 168, 56, 0.18);
+  background: rgba(255, 107, 53, 0.18);
   color: #f6e6c8;
   font-weight: 750;
   flex: 0 0 auto;
@@ -6069,7 +6069,7 @@ body:has(.pprofile--guest) .dating-tabbar {
   padding: 0 0.85rem;
   border: none;
   border-radius: 999px;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
   color: #140f0a;
   font: inherit;
   font-size: 0.78rem;
@@ -6111,8 +6111,8 @@ body:has(.pprofile--guest) .dating-tabbar {
 }
 
 .dating-lang-switch__btn.is-active {
-  background: rgba(232, 168, 56, 0.18);
-  border-color: rgba(232, 168, 56, 0.45);
+  background: rgba(255, 107, 53, 0.18);
+  border-color: rgba(255, 107, 53, 0.45);
   color: #fff;
 }
 
@@ -6130,8 +6130,8 @@ body:has(.pprofile--guest) .dating-tabbar {
   border-radius: 26px;
   padding: clamp(2rem, 6vw, 3.4rem) clamp(1.1rem, 4vw, 2.5rem);
   background:
-    radial-gradient(ellipse at 18% 12%, rgba(238, 42, 123, 0.2), transparent 52%),
-    radial-gradient(ellipse at 84% 88%, rgba(232, 168, 56, 0.15), transparent 55%),
+    radial-gradient(ellipse at 18% 12%, rgba(255, 107, 53, 0.2), transparent 52%),
+    radial-gradient(ellipse at 84% 88%, rgba(255, 107, 53, 0.15), transparent 55%),
     linear-gradient(165deg, #141019 0%, #0b0b10 58%, #120e14 100%);
 }
 
@@ -6162,9 +6162,9 @@ body:has(.pprofile--guest) .dating-tabbar {
     conic-gradient(
       from 0deg at 50% 50%,
       transparent 0deg,
-      rgba(238, 42, 123, 0.16) 70deg,
+      rgba(255, 107, 53, 0.16) 70deg,
       transparent 150deg,
-      rgba(232, 168, 56, 0.13) 240deg,
+      rgba(255, 107, 53, 0.13) 240deg,
       transparent 330deg
     );
   filter: blur(60px);
@@ -6274,7 +6274,7 @@ body:has(.pprofile--guest) .dating-tabbar {
   font-size: 1rem;
   font-weight: 750;
   color: #140f0a;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
   border: none;
   box-shadow: 0 14px 34px rgba(240, 98, 77, 0.3);
   transition: transform 0.12s ease, box-shadow 0.22s ease;
@@ -6539,7 +6539,7 @@ body:has(.pprofile--guest) .dating-tabbar {
   font-weight: 700;
   text-decoration: none;
   color: #140f0a;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
 }
 
 .dating-header__avatar {
@@ -6552,7 +6552,7 @@ body:has(.pprofile--guest) .dating-tabbar {
   font-weight: 800;
   text-decoration: none;
   color: #140f0a;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
 }
 
 /* --- Drawer ---------------------------------------------------- */
@@ -6621,7 +6621,7 @@ body:has(.pprofile--guest) .dating-tabbar {
   font-size: 1.05rem;
   font-weight: 800;
   color: #140f0a;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
 }
 
 .dating-drawer__who-text {
@@ -6707,7 +6707,7 @@ body:has(.pprofile--guest) .dating-tabbar {
 .dating-drawer__link.is-active {
   color: #fff;
   background: rgba(255, 255, 255, 0.07);
-  box-shadow: inset 2px 0 0 #e8a838;
+  box-shadow: inset 2px 0 0 #ff6b35;
 }
 
 .dating-drawer__link--danger {
@@ -6722,7 +6722,7 @@ body:has(.pprofile--guest) .dating-tabbar {
   font-weight: 750;
   text-decoration: none;
   color: #140f0a;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
 }
 
 /* --- Retire the two bars this replaces ------------------------ */
@@ -6790,7 +6790,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
 }
 
 .dating-filters__seg.is-active {
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
   color: #140f0a;
   box-shadow: 0 4px 14px rgba(240, 98, 77, 0.28);
 }
@@ -6836,8 +6836,8 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
 }
 
 .dating-chip.is-active {
-  border-color: rgba(232, 168, 56, 0.55);
-  background: rgba(232, 168, 56, 0.12);
+  border-color: rgba(255, 107, 53, 0.55);
+  background: rgba(255, 107, 53, 0.12);
   color: #f6e6c8;
 }
 
@@ -6871,8 +6871,8 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
 }
 
 .dating-filter-trigger.is-active {
-  border-color: rgba(232, 168, 56, 0.55);
-  background: rgba(232, 168, 56, 0.14);
+  border-color: rgba(255, 107, 53, 0.55);
+  background: rgba(255, 107, 53, 0.14);
   color: #f6e6c8;
 }
 
@@ -6883,7 +6883,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
   height: 1.15rem;
   padding: 0 0.28rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
   color: #140f0a;
   font-size: 0.68rem;
   font-weight: 800;
@@ -6921,7 +6921,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
     0
     calc(0.85rem + env(safe-area-inset-bottom, 0px));
   background:
-    radial-gradient(ellipse 90% 42% at 50% -8%, rgba(232, 168, 56, 0.14), transparent 58%),
+    radial-gradient(ellipse 90% 42% at 50% -8%, rgba(255, 107, 53, 0.14), transparent 58%),
     linear-gradient(180deg, #16131b 0%, #0d0d12 46%, #09090d 100%);
   animation: dating-filter-sheet-up 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -6969,7 +6969,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
   appearance: none;
   border: none;
   background: none;
-  color: rgba(232, 168, 56, 0.92);
+  color: rgba(255, 107, 53, 0.92);
   font: inherit;
   font-size: 0.86rem;
   font-weight: 650;
@@ -7055,7 +7055,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
 
 .dating-filter-sheet__chip.is-active {
   border-color: transparent;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
   color: #140f0a;
   box-shadow: 0 8px 22px rgba(240, 98, 77, 0.28);
 }
@@ -7091,7 +7091,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
   width: 78%;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #f0624d, #e8a838);
+  background: linear-gradient(90deg, #f0624d, #ff6b35);
 }
 
 .dating-filter-sheet__hint {
@@ -7114,7 +7114,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
   min-height: 52px;
   border: none;
   border-radius: 999px;
-  background: linear-gradient(135deg, #f0624d, #e8a838);
+  background: linear-gradient(135deg, #f0624d, #ff6b35);
   color: #140f0a;
   font: inherit;
   font-size: 1rem;
@@ -7347,7 +7347,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
 }
 
 .dating-required {
-  color: #e8a838;
+  color: #ff6b35;
   font-weight: 700;
 }
 
@@ -7382,7 +7382,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
 .community-form select:focus,
 .community-form textarea:focus {
   outline: none;
-  border-color: rgba(232, 168, 56, 0.6);
+  border-color: rgba(255, 107, 53, 0.6);
   background: rgba(255, 255, 255, 0.07);
 }
 
@@ -7514,8 +7514,8 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
   min-height: 1.85rem;
   padding: 0 0.65rem;
   border-radius: 999px;
-  border: 1px solid rgba(232, 168, 56, 0.4);
-  background: rgba(232, 168, 56, 0.12);
+  border: 1px solid rgba(255, 107, 53, 0.4);
+  background: rgba(255, 107, 53, 0.12);
   color: #f6e6c8;
   font-size: 0.78rem;
   font-weight: 600;
@@ -7625,8 +7625,8 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
 }
 
 .dating-filters-sheet__chip.is-active {
-  border-color: rgba(232, 168, 56, 0.55);
-  background: rgba(232, 168, 56, 0.16);
+  border-color: rgba(255, 107, 53, 0.55);
+  background: rgba(255, 107, 53, 0.16);
   color: #f6e6c8;
 }
 
@@ -7661,7 +7661,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
   min-height: 2.75rem;
   border: none;
   border-radius: 999px;
-  background: linear-gradient(180deg, #e8a838, #c4841e);
+  background: linear-gradient(180deg, #ff6b35, #c4841e);
   color: #1a1208;
   font: inherit;
   font-weight: 750;
@@ -7682,7 +7682,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
 .dating-completeness__bar {
   position: absolute;
   inset: 0 auto 0 0;
-  background: linear-gradient(90deg, rgba(232, 168, 56, 0.35), rgba(232, 168, 56, 0.12));
+  background: linear-gradient(90deg, rgba(255, 107, 53, 0.35), rgba(255, 107, 53, 0.12));
   pointer-events: none;
 }
 
@@ -8173,7 +8173,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
   color: #fff;
   text-decoration: none;
   background: var(--gradient-accent);
-  box-shadow: 0 6px 22px rgba(232, 168, 56, 0.22);
+  box-shadow: 0 6px 22px rgba(255, 107, 53, 0.22);
 }
 
 /* The like button is an absolutely-positioned card overlay by default;
@@ -8233,14 +8233,14 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
 }
 
 .fhome {
-  --fhome-bg: #0e0b12;
-  --fhome-card: #19151f;
-  --fhome-line: #2a2432;
+  --fhome-bg: #0a0a0e;
+  --fhome-card: #16161f;
+  --fhome-line: #26262f;
   --fhome-text: #f7f4fa;
-  --fhome-muted: #a79fb4;
-  --fhome-dim: #776f85;
-  --fhome-accent: #ff3d68;
-  --fhome-ink: #16070c;
+  --fhome-muted: #9e9aac;
+  --fhome-dim: #75717f;
+  --fhome-accent: #ff6b35;
+  --fhome-ink: #1a0b04;
   --fhome-online: #37e39b;
   background: var(--fhome-bg);
   color: var(--fhome-text);
@@ -8249,7 +8249,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
   -webkit-font-smoothing: antialiased;
 }
 
-.fhome a { color: #ffc2cf; text-decoration: none; }
+.fhome a { color: #ff9466; text-decoration: none; }
 .fhome a:hover { color: #fff; }
 
 .fhome__top {
@@ -8304,20 +8304,29 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
 .fhome__login {
   font-size: 14px;
   font-weight: 700;
-  color: var(--fhome-text) !important;
-  border: 1px solid #3a3344;
+  line-height: 1;
   border-radius: 999px;
-  padding: 10px 18px;
-  min-height: 44px;
+  padding: 0 18px;
+  height: 40px;
   display: inline-flex;
   align-items: center;
+  white-space: nowrap;
 }
+
+/* Same orange pill as the app header's sign-in. */
+.fhome__login {
+  color: var(--fhome-ink) !important;
+  background: var(--fhome-accent);
+  border: none;
+}
+
+.fhome__login:hover { background: #ff7d4d; text-decoration: none; }
 
 .fhome__lang {
   font-weight: 600;
-  color: #cfc8d8 !important;
-  border-color: var(--fhome-line);
-  padding: 10px 16px;
+  color: var(--fhome-muted) !important;
+  border: none;
+  padding: 0 10px;
 }
 
 .fhome__nav-link {
@@ -8484,7 +8493,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
   color: #8e86a0;
   text-align: center;
 }
-.fhome-hero__sso-inline a { font-weight: 700; color: #ffc2cf; }
+.fhome-hero__sso-inline a { font-weight: 700; color: #ff9466; }
 
 @media (min-width: 800px) {
   .fhome-hero__sso-inline { display: none; }
@@ -8943,7 +8952,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
   font-size: 14px;
 }
 .fhome-foot__nav a,
-.fhome-foot__nav span { color: #ffc2cf; }
+.fhome-foot__nav span { color: #ff9466; }
 
 /* Guest profile conversion bar + locked album */
 
@@ -8997,7 +9006,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
   padding: 14px 20px calc(20px + env(safe-area-inset-bottom, 0px));
 }
 .pbar__cta--guest {
-  background: #ff3d68;
+  background: #ff6b35;
   color: #16070c;
   box-shadow: none;
 }
@@ -9010,7 +9019,7 @@ body:has(.pprofile--guest) .dating-drawer-backdrop {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ff3d68;
+  color: #ff6b35;
 }
 .pbar__hint {
   grid-column: 1 / -1;
@@ -9306,7 +9315,8 @@ textarea {
 
 /* ---- browse: full-bleed dense grid ------------------------------------ */
 
-.dating-page.container {
+/* Scoped to browse: on likes, chat and settings it pushed text to the screen edge. */
+.dating-page--browse.container {
   width: 100%;
   /* .community-page adds clamp(1.25rem, 4vw, 2rem) on top. On a browse grid
      that is a dead black band between the header and the first row, so the
@@ -9870,4 +9880,410 @@ body.pmodal-open .dating-tabbar {
 .dating-grid__item {
   content-visibility: auto;
   contain-intrinsic-size: auto 180px 180px;
+}
+
+/* ---- settings ---------------------------------------------------------- */
+.settings-page {
+  max-width: 34rem;
+  padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom) + 2rem);
+}
+
+.settings-card {
+  margin-top: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+}
+
+.settings-card__title {
+  margin: 0 0 0.4rem;
+  font-size: 1.15rem;
+}
+
+.settings-card__lead {
+  margin: 0 0 1.1rem;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.settings-card__danger {
+  width: 100%;
+  min-height: var(--tap-min);
+  margin-top: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 999px;
+  background: rgba(248, 113, 113, 0.12);
+  color: #fca5a5;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.settings-card__danger:hover { background: rgba(248, 113, 113, 0.2); }
+.settings-card__danger:disabled { opacity: 0.6; cursor: progress; }
+
+.settings-card__done {
+  margin: 0;
+  color: var(--fhome-online, #37e39b);
+  font-weight: 600;
+}
+
+/* ---- empty states ------------------------------------------------------ */
+.dating-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 22rem;
+  margin: 3rem auto 0;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.dating-empty-state__icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 0.5rem;
+  border-radius: 50%;
+  color: #ff6b35;
+  background: rgba(255, 107, 53, 0.12);
+}
+
+.dating-empty-state__title {
+  margin: 0;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.dating-empty-state__hint {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.dating-empty-state__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-min);
+  margin-top: 0.85rem;
+  padding: 0 1.4rem;
+  border-radius: 999px;
+  background: #ff6b35;
+  color: #1a0b04 !important;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.dating-empty-state__cta:hover { background: #ff7d4d; }
+
+/* ======================================================================
+   Desktop redesign (≥1024px) — sidebar, hero row, 5-up grid, lock card.
+   Phones keep their current layout: every new element below is hidden
+   outside the media query, and the lock card collapses to its button.
+   ====================================================================== */
+
+.dating-tabbar__brand,
+.dating-tabbar__cta,
+.dating-hero__fine {
+  display: none;
+}
+
+.dating-lock-card { display: contents; }
+
+.dating-lock-card__icon,
+.dating-lock-card__title,
+.dating-lock-card__hint,
+.dating-lock-card__login {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  /* ---- sidebar ---- */
+  body { padding-left: 248px; }
+
+  .dating-tabbar {
+    width: 248px;
+    align-items: stretch;
+    gap: 4px;
+    padding: 76px 16px 20px;
+    background: #0d0d12;
+  }
+
+  .dating-tabbar__brand {
+    position: absolute;
+    top: 12px;
+    left: 68px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    height: 44px;
+    color: #f0eef5 !important;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    text-decoration: none !important;
+  }
+
+  .dating-tabbar__brand svg { color: #ff6b35; }
+
+  .dating-tabbar__item {
+    width: auto;
+    min-height: 46px;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 0 14px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #b9b5c6;
+  }
+
+  .dating-tabbar__item span { font-size: inherit; }
+  .dating-tabbar__item .dating-tabbar__icon { width: 20px; height: 20px; flex: none; }
+  .dating-tabbar__item:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+
+  .dating-tabbar__item.is-active {
+    background: rgba(255, 107, 53, 0.12);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .dating-tabbar__item.is-active::before { display: none; }
+  .dating-tabbar__item.is-active .dating-tabbar__icon { color: #ff6b35; }
+
+  .dating-tabbar__cta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    background: #14141b;
+  }
+
+  .dating-tabbar__cta-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #f0eef5;
+  }
+
+  .dating-tabbar__cta-hint {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #a5a1b3;
+  }
+
+  .dating-tabbar__cta-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    border-radius: 999px;
+    background: #ff6b35;
+    color: #1a0b04 !important;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none !important;
+  }
+
+  .dating-tabbar__cta-btn:hover { background: #ff7d4d; }
+
+  /* The logo lives in the sidebar now; keep its grid cell so the
+     header's right-hand items stay put. */
+  .dating-header__brand { visibility: hidden; }
+
+  .dating-header { padding-inline: 40px; }
+
+  /* The orange pill belongs to "create profile"; sign-in is secondary. */
+  .dating-header__login {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    color: #f0eef5 !important;
+  }
+
+  .dating-header__login:hover { background: rgba(255, 255, 255, 0.06) !important; }
+
+  /* ---- hero: text left, action right ---- */
+  .dating-page--browse .dating-hero--compact { margin: 0; }
+
+  .dating-page--browse .dating-hero--compact .dating-hero__compact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "meta  ."
+      "title cta"
+      "lead  fine";
+    column-gap: 48px;
+    align-items: end;
+    text-align: left;
+    padding: 44px 40px 32px;
+  }
+
+  .dating-page--browse .dating-hero--compact .dating-hero__meta {
+    grid-area: meta;
+    justify-self: start;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .dating-page--browse .dating-hero--compact .dating-hero__title {
+    grid-area: title;
+    margin: 12px 0 0;
+    font-size: 52px;
+    line-height: 1.12;
+    letter-spacing: -1px;
+  }
+
+  .dating-page--browse .dating-hero--compact .dating-hero__lead {
+    grid-area: lead;
+    margin: 12px 0 0;
+    max-width: 36em;
+    font-size: 18px;
+    line-height: 1.55;
+    color: #b9b5c6;
+  }
+
+  .dating-page--browse .dating-hero--compact .dating-hero__cta {
+    grid-area: cta;
+    justify-self: start;
+    width: auto;
+    max-width: none;
+    min-height: 56px;
+    margin: 0;
+    padding: 0 30px;
+    font-size: 17px;
+    font-weight: 800;
+  }
+
+  .dating-page--browse .dating-hero__fine {
+    display: block;
+    grid-area: fine;
+    align-self: start;
+    margin: 12px 0 0;
+    font-size: 13px;
+    color: #8f8b9c;
+  }
+
+  /* ---- grid: fewer, larger cards ---- */
+  .dating-page--browse .dating-browse-stage {
+    margin-top: 0;
+    padding: 0 40px 48px;
+  }
+
+  .dating-page--browse .dating-grid,
+  .dating-page--browse .dating-grid--blurred {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .dating-page--browse .dating-grid__item,
+  .dating-page--browse .dating-card {
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .dating-page--browse .dating-card {
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .dating-page--browse .dating-card__media { aspect-ratio: 3 / 4; }
+
+  .dating-page--browse .dating-card__overlay { padding: 2.6rem 0.9rem 0.85rem; }
+  .dating-page--browse .dating-card__name { font-size: 1.05rem; }
+
+  .dating-page--browse .dating-grid__item { contain-intrinsic-size: auto 210px 280px; }
+
+  /* Guests: the first row is sharp, the wall starts below it. */
+  .dating-page--browse .dating-grid--blurred .dating-grid__item:nth-child(-n + 5) .dating-card--blurred {
+    filter: none;
+  }
+
+  .dating-page--browse .dating-blur-overlay {
+    inset: 0;
+    align-items: center;
+    padding-top: 14%;
+    border-radius: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 10, 14, 0) 0%,
+      rgba(10, 10, 14, 0) 26%,
+      rgba(10, 10, 14, 0.7) 52%,
+      rgba(10, 10, 14, 0.95) 100%
+    );
+  }
+
+  /* ---- lock card over the blurred rows ---- */
+  .dating-lock-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 420px;
+    padding: 28px 32px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    background: #14141b;
+    text-align: center;
+    pointer-events: auto;
+  }
+
+  .dating-lock-card__icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255, 107, 53, 0.14);
+    color: #ff6b35;
+  }
+
+  .dating-lock-card__title {
+    display: block;
+    margin: 0;
+    font-size: 19px;
+    font-weight: 700;
+    color: #f0eef5;
+  }
+
+  .dating-lock-card__hint {
+    display: block;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #a5a1b3;
+  }
+
+  .dating-lock-card .dating-blur-overlay__cta { margin-top: 6px; }
+
+  .dating-lock-card__login {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ff9466 !important;
+  }
+
+  /* The landing page hides the sidebar, so it must not reserve its width. */
+  body:has(.fhome) { padding-left: 0; }
+
+  /* Likes, chat, settings: same 40px gutter as browse, readable width. */
+  .community-page.dating-page:not(.dating-page--browse):not(.dating-page--editor):not(.dating-page--album) {
+    width: 100%;
+    max-width: 1040px;
+    margin-inline: 0;
+    padding-inline: 40px;
+    box-sizing: border-box;
+  }
 }

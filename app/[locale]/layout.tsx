@@ -56,7 +56,16 @@ export default async function LocaleLayout({
       />
       {children}
       {modal}
-      <DatingTabBar locale={locale} labels={d.tabBar} />
+      <DatingTabBar
+        locale={locale}
+        labels={d.tabBar}
+        appName={getAppName()}
+        cta={
+          user
+            ? null
+            : { href: loginHrefWithNext(DATING_CREATE_NEXT, locale), label: d.heroCta }
+        }
+      />
     </>
   );
 }

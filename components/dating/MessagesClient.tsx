@@ -3,11 +3,13 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api/client';
+import { DatingEmptyState } from './DatingEmptyState';
 import type { Locale } from '@/lib/i18n/types';
 
 export type InboxLabels = {
   empty: string;
   emptyHint: string;
+  emptyCta: string;
   loading: string;
 };
 
@@ -46,10 +48,13 @@ export function MessagesClient({
 
   if (threads.length === 0) {
     return (
-      <div className="dating-inbox__empty">
-        <p className="dating-inbox__status">{labels.empty}</p>
-        <p className="dating-inbox__hint">{labels.emptyHint}</p>
-      </div>
+      <DatingEmptyState
+        icon="chat"
+        title={labels.empty}
+        hint={labels.emptyHint}
+        ctaHref={`/${locale}/`}
+        ctaLabel={labels.emptyCta}
+      />
     );
   }
 

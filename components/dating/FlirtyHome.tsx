@@ -30,6 +30,8 @@ type Props = {
   legalEmail: string;
 };
 
+const MIN_ONLINE_TO_SHOW = 5;
+
 function HeartIcon({ size = 22 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -62,7 +64,7 @@ function Brand({ className }: { className?: string }) {
       <span className="fhome__mark" aria-hidden>
         <HeartIcon size={18} />
       </span>
-      flirty<span className="fhome__dot">.</span>
+      Flirty
     </span>
   );
 }
@@ -113,6 +115,10 @@ export function FlirtyHome({
     return q ? `${landing}?${q}` : landing;
   }
 
+  // A near-empty "online now" count reads as a dead site; below this the
+  // total of active profiles is the more honest signal.
+  const showOnline = onlineCount >= MIN_ONLINE_TO_SHOW;
+
   return (
     <div className="fhome">
       <header className="fhome__top">
@@ -136,7 +142,9 @@ export function FlirtyHome({
         <div className="fhome-hero__copy">
           <p className="fhome-pill">
             <span className="fhome-dot" aria-hidden />
-            {fillHomeCopy(labels.onlineNowPeople, { n: onlineCount })}
+            {showOnline
+              ? fillHomeCopy(labels.onlineNowPeople, { n: onlineCount })
+              : fillHomeCopy(labels.activeProfilesPeople, { n: profileCount })}
           </p>
           <h1 className="fhome-hero__title">
             {labels.heroTitleBefore}
@@ -164,10 +172,10 @@ export function FlirtyHome({
 
         <aside className="fhome-live" aria-label={labels.liveOnline}>
           <div className="fhome-live__count">
-            <strong>{onlineCount}</strong>
+            <strong>{showOnline ? onlineCount : profileCount}</strong>
             <span>
               <span className="fhome-dot" aria-hidden />
-              {labels.liveOnline}
+              {showOnline ? labels.liveOnline : labels.liveProfiles}
             </span>
           </div>
           <FlirtyHomeActivity events={activity} />

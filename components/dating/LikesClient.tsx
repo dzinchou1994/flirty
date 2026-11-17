@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '@/lib/api/client';
+import { DatingEmptyState } from './DatingEmptyState';
 import type { Locale } from '@/lib/i18n/types';
 
 export type LikesLabels = {
@@ -13,6 +14,8 @@ export type LikesLabels = {
   emptyReceived: string;
   emptySent: string;
   emptyViews: string;
+  emptyCtaProfile: string;
+  emptyCtaBrowse: string;
   openChat: string;
   loading: string;
   loadMore: string;
@@ -156,7 +159,14 @@ export function LikesClient({
       {loading && rows.length === 0 ? (
         <p className="dating-likes__status">{labels.loading}</p>
       ) : rows.length === 0 ? (
-        <p className="dating-likes__status">{emptyText}</p>
+        <DatingEmptyState
+          icon={tab === 'views' ? 'eye' : 'heart'}
+          title={emptyText}
+          // Nobody liked you / viewed you yet -> improve your profile.
+          // You liked nobody yet -> go browse.
+          ctaHref={tab === 'sent' ? `/${locale}/` : `/${locale}/user/dating/`}
+          ctaLabel={tab === 'sent' ? labels.emptyCtaBrowse : labels.emptyCtaProfile}
+        />
       ) : (
         <ul className="dating-likes__grid">
           {rows.map((row) => (
