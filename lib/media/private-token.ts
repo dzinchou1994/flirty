@@ -64,7 +64,9 @@ export function verifyPrivatePhotoToken(
 }
 
 export function privatePhotoAccessPath(token: string): string {
-  return `/api/v1/media/private?t=${encodeURIComponent(token)}`;
+  // trailingSlash is on, so the unslashed path 308s. Keep the query on the
+  // canonical path the route actually serves.
+  return `/api/v1/media/private/?t=${encodeURIComponent(token)}`;
 }
 
 /**

@@ -6,6 +6,7 @@ import {
   generateState,
 } from '@/lib/auth/oauth';
 import { parseSafeDatingNext } from '@/lib/auth/safe-next';
+import { publicRedirect } from '@/lib/http/public-origin';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
   // Empty string in the process env overrides .env.local — treat as missing.
   if (!clientId || !clientSecret) {
     console.error('[auth/google] GOOGLE_CLIENT_ID/SECRET missing or empty');
-    return NextResponse.redirect(new URL('/ka/shesvla/?error=oauth', request.url));
+    return NextResponse.redirect(publicRedirect(request, '/ka/shesvla/?error=oauth'));
   }
 
   const mode =

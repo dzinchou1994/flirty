@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { DatingIntroSheet } from '@/components/dating/DatingIntroSheet';
 import { api } from '@/lib/api/client';
+import { datingHomePath } from '@/lib/i18n/paths';
 import type { Locale } from '@/lib/i18n/types';
 
 export type MenuLabels = {
@@ -59,6 +59,15 @@ type Props = {
   intro: IntroLabels;
   /** Dating-profile action moved out of the page header into this menu. */
   profileAction: { href: string; label: string };
+  /** One-tap filters pinned into the desktop sidebar. */
+  quickFilters: {
+    heading: string;
+    online: string;
+    all: string;
+    male: string;
+    female: string;
+    trans: string;
+  };
 };
 
 export function DatingHeader({
@@ -69,12 +78,25 @@ export function DatingHeader({
   username,
   intro,
   profileAction,
+  quickFilters,
 }: Props) {
   const [open, setOpen] = useState(false);
-  const [howOpen, setHowOpen] = useState(false);
   const pathname = usePathname() || '';
+  const search = useSearchParams();
   const router = useRouter();
   const base = `/${locale}`;
+  const home = datingHomePath(locale);
+
+  const quickLinks = [
+    { key: 'online', label: quickFilters.online, qs: 'onlineOnly=1' },
+    { key: 'all', label: quickFilters.all, qs: 'view=all' },
+    { key: 'male', label: quickFilters.male, qs: 'bucket=male' },
+    { key: 'female', label: quickFilters.female, qs: 'bucket=female' },
+    { key: 'trans', label: quickFilters.trans, qs: 'bucket=trans' },
+  ].map((f) => {
+    const [k, v] = f.qs.split('=');
+    return { ...f, href: `${home}?${f.qs}`, active: search?.get(k) === v };
+  });
 
   // Close on route change, and on Escape.
   useEffect(() => setOpen(false), [pathname]);
@@ -94,9 +116,15 @@ export function DatingHeader({
 
   const browseLinks = [
     {
-      href: `${base}/gatsnoba/`,
+      href: home,
       label: labels.browse,
-      active: pathname.startsWith(`${base}/gatsnoba`),
+      active:
+        pathname === '/' ||
+        pathname === base ||
+        pathname === `${base}/` ||
+        (pathname.startsWith(`${base}/gatsnoba/`) &&
+          pathname !== `${base}/gatsnoba/` &&
+          pathname !== `${base}/gatsnoba`),
     },
     ...(isLoggedIn
       ? [
@@ -121,15 +149,10 @@ export function DatingHeader({
         { href: `${base}/shesvla/`, label: labels.login },
       ];
 
-  function openHowItWorks() {
-    setOpen(false);
-    window.setTimeout(() => setHowOpen(true), 280);
-  }
-
   async function logout() {
     await api('/api/v1/auth/logout/', { method: 'POST' });
     setOpen(false);
-    router.push(`${base}/gatsnoba/`);
+    router.push(home);
     router.refresh();
   }
 
@@ -162,17 +185,18 @@ export function DatingHeader({
           </span>
         </button>
 
-        <Link href={`${base}/gatsnoba/`} className="dating-header__brand">
+        <Link href={home} className="dating-header__brand">
           <span className="dating-header__mark" aria-hidden>
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-              <path
-                d="M12 20.8 4.4 13.2a4.7 4.7 0 0 1 6.6-6.7l1 1 1-1a4.7 4.7 0 0 1 6.6 6.7L12 20.8Z"
-                fill="currentColor"
-              />
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden>
+              <path d="M12 21s-8-4.9-8-10.4A4.6 4.6 0 0 1 12 7.6a4.6 4.6 0 0 1 8 3C20 16.1 12 21 12 21z" />
             </svg>
           </span>
           <span className="dating-header__name">{appName}</span>
         </Link>
+
+        {/* Page-specific header actions portal in here — the browse filter
+            button uses it, so filters cost no band of their own. */}
+        <div id="dating-header-slot" className="dating-header__slot" />
 
         {isLoggedIn ? (
           <Link
@@ -241,9 +265,26 @@ export function DatingHeader({
               {l.label}
             </Link>
           ))}
-          <button type="button" className="dating-drawer__link" onClick={openHowItWorks}>
+          <Link
+            href={`${base}/gatsnoba/`}
+            className="dating-drawer__link"
+            onClick={() => setOpen(false)}
+          >
             {intro.open}
-          </button>
+          </Link>
+
+          <p className="dating-drawer__section">{quickFilters.heading}</p>
+          <div className="dating-drawer__quick">
+            {quickLinks.map((f) => (
+              <Link
+                key={f.key}
+                href={f.href}
+                className={`dating-drawer__chip${f.active ? ' is-active' : ''}`}
+              >
+                {f.label}
+              </Link>
+            ))}
+          </div>
 
           <p className="dating-drawer__section">{labels.sectionAccount}</p>
           {accountLinks.map((l) => (
@@ -294,12 +335,6 @@ export function DatingHeader({
           </div>
         </nav>
       </aside>
-      <DatingIntroSheet
-        labels={intro}
-        open={howOpen}
-        onOpenChange={setHowOpen}
-        hideTrigger
-      />
     </>
   );
 }

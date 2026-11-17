@@ -1,16 +1,16 @@
 # Dating
 
-Standalone dating product. Shares one PostgreSQL database with the community
-app (same `User` table) but shares no code, branding, domain, or navigation.
+Standalone dating product. Its own Postgres, code, branding, and domain.
+The database was forked once from Intimgram so existing users keep the same
+username and password. New accounts are created only here.
 
 ## Hard rules
 
 - **API-first** — every feature is a JSON endpoint under `/api/v1`. See `API.md`.
-- **No migrations from this repo.** The community app owns `_prisma_migrations`.
-  Only `npm run db:generate` exists here.
+- **This repo owns migrations.** `npm run db:migrate` is `prisma migrate deploy`.
+  Do not run `migrate dev` against production.
 - **No sexology / kamasutra / quiz content** — dating only.
-- **No community-app strings** in network traffic except the database name inside
-  `DATABASE_URL`.
+- **No community-app strings** in network traffic.
 
 ## Locales
 
@@ -23,10 +23,10 @@ app (same `User` table) but shares no code, branding, domain, or navigation.
 ## Local setup
 
 ```bash
-# One-time: local Postgres 17 + copy of prod (no SSH for day-to-day)
+# One-time: local Postgres 17 + copy of dating-prod
 brew install postgresql@17
 brew services start postgresql@17
-bash scripts/db-sync-local.sh   # needs SSH host `intimgram` once
+bash scripts/db-sync-local.sh   # SSH host `dating`
 
 cp .env.example .env.local
 # DATABASE_URL=postgresql://dating:dating_local@127.0.0.1:5432/dating?schema=public&sslmode=disable
@@ -40,28 +40,16 @@ bash scripts/db-sync-local.sh
 
 ## Account deletion
 
-1. This app hard-deletes dating rows + dating messages immediately.
-2. Inserts `UserDeletionRequest` (`pending`) for the community app to erase `User`.
-3. Login / refresh / getAuth fail as soon as that row is pending — not after
-   User erasure completes.
-
-Migration SQL (community repo, **do not run from here**):
-`docs/intimgram-migrations/0030_user_deletion_request.sql`
+Deletes the `User` row in this database. Related dating rows cascade.
+Intimgram is not notified. A leftover `UserDeletionRequest` in `pending` or
+`processing` still blocks login.
 
 ## Contact privacy / safety / discovery
 
 See `docs/CONTACT-PRIVACY.md` and `docs/UI-SPEC.md`.
 
-Intimgram migrations (hand over; **do not run from here**):
-
-| File | Purpose |
-|------|---------|
-| `docs/intimgram-migrations/0030_user_deletion_request.sql` | Account erasure queue |
-| `docs/intimgram-migrations/0031_dating_safety_privacy_discovery.sql` | Blocks, visibility, geohash, private albums, taps, report SLA |
-| `docs/intimgram-migrations/0032_dating_profile_view.sql` | Profile view history (“Viewed Me”) |
-
-After `0031`, grant `dating_app` on new tables:
-`dating-app-infra/db/dating-db-role-safety-privacy.sql`.
+`docs/intimgram-migrations/` is historical SQL from the shared-database period.
+The current schema is `prisma/migrations/20261116000000_baseline`.
 
 ## Scripts
 
@@ -70,6 +58,6 @@ After `0031`, grant `dating_app` on new tables:
 | `npm run dev` | Next dev on 3003 |
 | `npm run build` | Production build |
 | `npm run test` | Unit tests (privacy, EXIF, buckets, push, private URLs) |
-| `npm run db:generate` | `prisma generate` only |
-
-There is **no** `db:migrate` / `db:push`.
+| `npm run db:generate` | `prisma generate` |
+| `npm run db:migrate` | `prisma migrate deploy` (production and CI) |
+| `npm run db:migrate:dev` | `prisma migrate dev` (local only) |

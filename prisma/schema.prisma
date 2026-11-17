@@ -7,8 +7,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Generate-only. Migrations are owned by the community app repo.
-// Never run prisma migrate / db push from this project.
+// This repo owns migrations. Apply with `npm run db:migrate`
+// (`prisma migrate deploy`). Do not use `migrate dev` against production.
 
 enum Plan {
   USER
@@ -226,8 +226,8 @@ model DatingPhoto {
   sortOrder  Int      @default(0)
   status     String   @default("approved")
   /// public | private — private URLs are signed and short-lived.
-  /// Album UI defaults new uploads to private; profile editor still sends public.
-  visibility String   @default("private")
+  /// Album uploads send private. Profile editor sends public. Matches migration 0031.
+  visibility String   @default("public")
   createdAt  DateTime @default(now())
 
   profile DatingProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
@@ -325,8 +325,8 @@ model DmReadState {
   @@index([userId])
 }
 
-/// Queued User erasure for the community app. Dating data is deleted immediately.
-/// Login fails as soon as a pending/processing row exists for the user.
+/// Legacy queue from when Intimgram erased the User row.
+/// Account deletion now removes the User here. A pending row still blocks login.
 model UserDeletionRequest {
   id          String    @id @default(cuid())
   userId      String    @unique

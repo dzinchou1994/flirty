@@ -10,6 +10,8 @@
     "test": "tsx --test lib/**/*.test.ts",
     "clean": "rm -rf .next node_modules/.cache",
     "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev",
     "postinstall": "prisma generate"
   },
   "dependencies": {

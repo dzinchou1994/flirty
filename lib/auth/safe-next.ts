@@ -2,7 +2,9 @@
  * Allow-listed post-login redirects. Rejects absolute URLs / open redirects.
  */
 const ALLOWED = new Set([
+  '/',
   '/gatsnoba/',
+  '/gei-gatsnoba/',
   '/user/dating/',
   '/user/dating/album/',
   '/likes/',
@@ -29,6 +31,10 @@ export function parseSafeDatingNext(raw: string | null | undefined): string | nu
     pathname = pathname.slice(3) || '/';
   }
 
-  if (!pathname.endsWith('/')) pathname += '/';
-  return ALLOWED.has(pathname) ? pathname : null;
+  if (pathname !== '/' && !pathname.endsWith('/')) pathname += '/';
+
+  // Exact allow-list, or a public profile under /gatsnoba/{username}/.
+  if (ALLOWED.has(pathname)) return pathname;
+  if (/^\/gatsnoba\/[a-zA-Z0-9_.-]+\/$/.test(pathname)) return pathname;
+  return null;
 }

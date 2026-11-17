@@ -3,17 +3,20 @@ import { isUserDeletionPending } from '@/lib/auth/getAuth';
 import { verifyDatingSsoCode } from '@/lib/auth/intimgram-sso';
 import { parseSafeDatingNext } from '@/lib/auth/safe-next';
 import { attachSessionCookies, issueSession } from '@/lib/auth/session';
-import { localePath } from '@/lib/i18n/paths';
+import { datingHomePath, localePath } from '@/lib/i18n/paths';
 import { isLocale } from '@/lib/i18n/config';
 import type { Locale } from '@/lib/i18n/types';
 import { prisma } from '@/lib/prisma';
 import { ensureDatabaseUrl } from '@/lib/db-url';
+import { publicRedirect } from '@/lib/http/public-origin';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   if (!ensureDatabaseUrl()) {
-    return NextResponse.redirect(new URL('/ka/shesvla/?error=SERVICE_UNAVAILABLE', request.url));
+    return NextResponse.redirect(
+      publicRedirect(request, '/ka/shesvla/?error=SERVICE_UNAVAILABLE'),
+    );
   }
 
   const code = request.nextUrl.searchParams.get('code');
@@ -24,24 +27,31 @@ export async function GET(request: NextRequest) {
   const verified = code ? verifyDatingSsoCode(code) : null;
   if (!verified) {
     return NextResponse.redirect(
-      new URL(localePath(locale, '/shesvla/') + '?error=oauth', request.url),
+      publicRedirect(request, localePath(locale, '/shesvla/') + '?error=oauth'),
     );
   }
 
+  // Existing Intimgram ids that were in the fork can sign in. This does not
+  // create a user, and it does not pull accounts made on Intimgram later.
   const user = await prisma.user.findUnique({
     where: { id: verified.userId },
     select: { id: true },
   });
   if (!user || (await isUserDeletionPending(user.id))) {
     return NextResponse.redirect(
-      new URL(localePath(locale, '/shesvla/') + '?error=ACCOUNT_DELETED', request.url),
+      publicRedirect(
+        request,
+        localePath(locale, '/shesvla/') + '?error=ACCOUNT_DELETED',
+      ),
     );
   }
 
   const session = issueSession(user.id);
-  const dest = next
-    ? localePath(locale, next)
-    : localePath(locale, '/gatsnoba/');
-  const res = NextResponse.redirect(new URL(dest, request.url));
+  // Intimgram "გაცნობა" should open Flirty's discovery home, not /gatsnoba marketing.
+  const dest =
+    !next || next === '/' || next === '/gatsnoba/'
+      ? datingHomePath(locale)
+      : localePath(locale, next);
+  const res = NextResponse.redirect(publicRedirect(request, dest));
   return attachSessionCookies(res, session);
 }

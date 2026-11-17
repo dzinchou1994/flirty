@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api/client';
 import { LOCATION_NEED_KEY } from '@/components/dating/LocationConfirm';
@@ -8,6 +8,7 @@ import {
   datingSsoCallbackUrl,
   getIntimgramOrigin,
 } from '@/lib/auth/intimgram-sso-public';
+import { datingHomePath, localePath } from '@/lib/i18n/paths';
 import type { Locale } from '@/lib/i18n/types';
 
 export type AuthLabels = {
@@ -119,12 +120,17 @@ export function AuthClient({
     return `/api/auth/google/?${params.toString()}`;
   }, [isRegister, locale, nextParam]);
 
-  const intimgramHref = useMemo(() => {
+  // Build on the client so the return host is always the browser origin
+  // (flirty.ge), not a stale SSR / baked NEXT_PUBLIC_SITE_URL.
+  const [intimgramHref, setIntimgramHref] = useState('#');
+  useEffect(() => {
     const returnUrl = datingSsoCallbackUrl(locale, nextParam);
     const params = new URLSearchParams();
     params.set('return', returnUrl);
     params.set('locale', locale);
-    return `${getIntimgramOrigin()}/api/dating-sso/start/?${params.toString()}`;
+    setIntimgramHref(
+      `${getIntimgramOrigin()}/api/dating-sso/start/?${params.toString()}`,
+    );
   }, [locale, nextParam]);
 
   function switchMode(next: Mode) {
@@ -163,8 +169,10 @@ export function AuthClient({
     }
     const dest =
       nextParam && nextParam.startsWith('/') && !nextParam.startsWith('//')
-        ? `/${locale}${nextParam}`
-        : `/${locale}/gatsnoba/`;
+        ? nextParam === '/'
+          ? datingHomePath(locale)
+          : localePath(locale, nextParam)
+        : datingHomePath(locale);
     router.push(dest);
     router.refresh();
   }

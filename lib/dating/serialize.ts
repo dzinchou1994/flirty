@@ -9,10 +9,8 @@ import {
   type DatingShowMe,
 } from '@/lib/dating/presets';
 import { parseDatingPhotoStatus } from '@/lib/dating/shared';
-import { presenceFromLastActive, type PresenceLabel } from '@/lib/dating/presence';
+import { isRecentlyOnline, presenceFromLastActive, type PresenceLabel } from '@/lib/dating/presence';
 import { resolvePhotoUrlForViewer } from '@/lib/media/private-token';
-
-const ONLINE_MS = 15 * 60 * 1000;
 
 type PhotoRow = {
   id: string;
@@ -145,8 +143,7 @@ export function mapRowToView(
         sortOrder: a.sortOrder,
       })) ?? [],
     updatedAt: row.updatedAt,
-    isOnline:
-      presenceEnabled && Date.now() - row.user.lastActiveAt.getTime() < ONLINE_MS,
+    isOnline: presenceEnabled && isRecentlyOnline(row.user.lastActiveAt),
     presence: presence === 'hidden' ? null : presence,
   };
 }

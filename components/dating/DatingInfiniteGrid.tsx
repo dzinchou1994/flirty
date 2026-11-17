@@ -71,6 +71,8 @@ export function DatingInfiniteGrid({
   const hasMoreRef = useRef(initialHasMore);
   /** Consecutive pages that added nothing; guards against an endless loop. */
   const emptyRunsRef = useRef(0);
+  /** Consecutive rate-limited pages; retried with a pause, then given up. */
+  const rateWaitsRef = useRef(0);
   const loadMoreRef = useRef<(() => Promise<void>) | null>(null);
   hasMoreRef.current = hasMore;
 
@@ -79,6 +81,7 @@ export function DatingInfiniteGrid({
     pageRef.current = 1;
     cursorRef.current = initialCursor;
     emptyRunsRef.current = 0;
+    rateWaitsRef.current = 0;
     setHasMore(initialHasMore);
   }, [initialProfiles, initialHasMore, initialCursor]);
 
@@ -101,8 +104,28 @@ export function DatingInfiniteGrid({
       const res = await fetch(`/api/v1/feed/?${params.toString()}`, { credentials: 'include' });
       const data = (await res.json().catch(() => ({}))) as {
         ok?: boolean;
+        error?: { code?: string };
         data?: { items?: DatingProfilePayload[]; nextCursor?: string | null };
       };
+
+      // Discovery allows 60 requests a minute. Hitting that used to look
+      // identical to "there is nothing left": hasMore went false, the
+      // sentinel unmounted and the grid was dead for the rest of the page
+      // view, stranding the user a few hundred profiles early. It is a
+      // pause, not an end — wait out the window and carry on.
+      if (res.status === 429 || data.error?.code === 'RATE_LIMITED') {
+        rateWaitsRef.current += 1;
+        if (rateWaitsRef.current <= 3) {
+          inFlight.current = false;
+          setLoading(false);
+          window.setTimeout(() => void loadMoreRef.current?.(), 2500);
+          return;
+        }
+        setHasMore(false);
+        return;
+      }
+      rateWaitsRef.current = 0;
+
       if (!res.ok || !data.ok || !Array.isArray(data.data?.items)) {
         setHasMore(false);
         return;
@@ -176,7 +199,7 @@ export function DatingInfiniteGrid({
               locale={locale}
               liked={likedSet.has(profile.id)}
               showLike={!locked}
-              blurred={locked}
+              blurred={locked && !(profile.isOnline && profile.photos.length === 0)}
               messages={messages}
             />
           </div>

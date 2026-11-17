@@ -155,7 +155,7 @@ export async function PUT(req: Request) {
       position: lgbt ? parsePosition(data.position ?? null) : null,
       communityTags: lgbt && data.communityTags ? parseCommunityTags(data.communityTags) : [],
       showMe,
-      isVisible: data.isVisible ?? false,
+      isVisible: data.isVisible ?? (data.bio || '').trim().length >= 10,
       hideFromContacts: data.hideFromContacts ?? false,
       requireMutualInterest: data.requireMutualInterest ?? false,
       visibilityMode: data.visibilityMode ?? 'discoverable',

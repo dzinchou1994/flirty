@@ -410,6 +410,7 @@ export function DatingProfileEditor({
     for (const item of queue) {
       const fd = new FormData();
       fd.set('file', item.file);
+      fd.set('visibility', 'public');
       const result = await addPhoto(null, fd);
       if (result?.error) {
         setUploading(false);
@@ -429,14 +430,6 @@ export function DatingProfileEditor({
     const form = event.currentTarget;
     const formData = new FormData(form);
     setStatus(null);
-
-    if (totalCount === 0) {
-      setStatus({
-        type: 'error',
-        text: messages.errors.photoRequiredForProfile ?? messages.errors.photoRequired,
-      });
-      return;
-    }
 
     startSaveTransition(async () => {
       const uploaded = await flushPendingUploads();
@@ -566,8 +559,8 @@ export function DatingProfileEditor({
     Boolean(profile) &&
     !isRestricted &&
     !profile?.isVisible &&
-    (profile?.moderationStatus === 'pending' || isAutoCorrectable || needsPhoto || needsBio);
-  const canResume = moderationStatus === 'active' && approvedCount > 0;
+    (profile?.moderationStatus === 'pending' || isAutoCorrectable || needsBio);
+  const canResume = moderationStatus === 'active' && !needsBio;
 
   return (
     <div className={`community-settings dating-editor${isBlocked ? ' dating-editor--blocked' : ''}`}>
@@ -609,10 +602,7 @@ export function DatingProfileEditor({
       <section className="community-settings__section dating-editor__photos-section">
         <div className="dating-editor__photos-head">
           <div>
-            <h2>
-              {messages.photosTitle}
-              <RequiredMark label={messages.required} />
-            </h2>
+            <h2>{messages.photosTitle}</h2>
             <p className="community-settings__hint">
               {isRestricted && isHidden ? messages.restrictionPhotoHint : messages.photosLead}
             </p>

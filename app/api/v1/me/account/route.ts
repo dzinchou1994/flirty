@@ -18,7 +18,10 @@ export async function DELETE(req: Request) {
     submittedUsername: parsed.data.username,
     submittedPassword: parsed.data.password,
   });
-  if (!result.ok) return err(result.code, result.message, { status: 400 });
+  if (!result.ok) {
+    const status = result.code === 'DELETE_FAILED' ? 503 : 400;
+    return err(result.code, result.message, { status });
+  }
 
-  return clearSessionCookies(ok({ deleted: true, userErasure: 'queued' }));
+  return clearSessionCookies(ok({ deleted: true, userErasure: 'deleted' }));
 }

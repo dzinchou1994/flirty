@@ -14,16 +14,17 @@ import {
 } from "@/lib/dating/presets";
 import { getDatingDict } from "@/lib/i18n/dating-dict";
 import { isLocale } from "@/lib/i18n/config";
-import { localePath } from "@/lib/i18n/paths";
+import { datingHomePath, localePath } from "@/lib/i18n/paths";
 import type { Locale } from "@/lib/i18n/types";
 import { simpleMetadata } from "@/lib/seo-stub";
 import { resolveMediaSrc } from "@/lib/media/url";
-import { DatingNoPhoto } from "@/components/dating/DatingNoPhoto";
 import { DatingLikeButton } from "@/components/dating/DatingLikeButton";
 import { DatingProfileReportForm } from "@/components/dating/DatingProfileReportForm";
 import { ProfilePhotoCarousel } from "@/components/dating/ProfilePhotoCarousel";
 import { safeCommunity } from "@/lib/dating/safe";
 import { getZodiacSignById, getZodiacSignName } from "@/lib/dating/zodiac";
+import { fillHomeCopy } from "@/lib/dating/home";
+import { loginHrefWithNext } from "@/lib/auth/next-paths";
 
 type Props = { params: Promise<{ locale: string; username: string }> };
 
@@ -52,35 +53,40 @@ export default async function DatingProfilePage({ params }: Props) {
   const currentUser = await getSessionUser();
   const isOwnProfile = currentUser?.id === profile.userId;
 
-  // Visibility and photo rules apply to other people's profiles. Your own
-  // always opens, so you can see how it looks before it is published —
-  // including when it is hidden or still waiting for a photo.
-  if (!isOwnProfile && (!profile.isVisible || profile.photos.length === 0)) {
+  // A photoless profile is public only while that person is online.
+  // Your own page still opens so you can preview it before it is published.
+  if (!isOwnProfile && !profile.isVisible) {
+    notFound();
+  }
+  if (!isOwnProfile && profile.photos.length === 0 && !profile.isOnline) {
     notFound();
   }
 
-  // Guests / users without a dating profile cannot view others.
-  if (!isOwnProfile) {
-    const unlocked = currentUser
+  const unlocked = !isOwnProfile
+    ? currentUser
       ? await safeCommunity(
           () => userHasUnlockingDatingProfile(currentUser.id),
           false,
         )
-      : false;
-    if (!unlocked) {
-      redirect(localePath(locale, "/gatsnoba/"));
-    }
+      : false
+    : true;
+  const isGuestView = !isOwnProfile && !unlocked;
+
+  // Logged-in users without a dating profile still cannot open others —
+  // send them to create one. Guests get a teaser profile with a soft gate.
+  if (!isOwnProfile && currentUser && !unlocked) {
+    redirect(datingHomePath(locale));
   }
 
   const likeStatus =
-    currentUser && !isOwnProfile
+    currentUser && !isOwnProfile && unlocked
       ? await safeCommunity(
           () => getDatingLikeStatus(currentUser.id, profile.id),
           { liked: false, matched: false },
         )
       : { liked: false, matched: false };
 
-  if (currentUser && !isOwnProfile) {
+  if (currentUser && !isOwnProfile && unlocked) {
     const { recordProfileView } = await import("@/lib/dating/views");
     await safeCommunity(
       () =>
@@ -154,8 +160,13 @@ export default async function DatingProfilePage({ params }: Props) {
     });
   }
 
+  const guestJoinHref = loginHrefWithNext(
+    `/gatsnoba/${profile.username}/`,
+    locale,
+  );
+
   return (
-    <main className="pprofile">
+    <main className={`pprofile${isGuestView ? " pprofile--guest" : ""}`}>
       <header className="pprofile__hero">
         {photos.length ? (
           <ProfilePhotoCarousel
@@ -164,14 +175,17 @@ export default async function DatingProfilePage({ params }: Props) {
             labels={{ prev: d.prevPhoto, next: d.nextPhoto }}
           />
         ) : (
-          <div className="pprofile__nophoto">
-            <DatingNoPhoto label={d.noPhoto} sublabel={d.title} />
+          <div className="pprofile__nophoto" role="img" aria-label={d.noPhoto}>
+            <span className="pprofile__nophoto-initial" aria-hidden>
+              {(displayName.trim()[0] || "?").toUpperCase()}
+            </span>
+            <span className="pprofile__nophoto-label">{d.noPhoto}</span>
           </div>
         )}
 
         <div className="pprofile__chrome">
           <Link
-            href={localePath(locale, "/gatsnoba/")}
+            href={isGuestView ? localePath(locale, "/gatsnoba/") : datingHomePath(locale)}
             className="pprofile__back"
             aria-label={d.backToBrowseFromProfile}
           >
@@ -212,25 +226,54 @@ export default async function DatingProfilePage({ params }: Props) {
         </div>
       </header>
 
+      {/* Guests get the three-chip teaser; signed-in viewers get the full
+          "interests" section below, so showing both duplicated every tag. */}
+      {isGuestView && interestKeys.length ? (
+        <div className="pprofile__tags">
+          {interestKeys.slice(0, 3).map((key) => (
+            <span key={key} className="pprofile__tag">
+              {d.interestLabels[key]}
+            </span>
+          ))}
+        </div>
+      ) : null}
+
       {profile.bio ? (
         <section className="psection psection--bio">
           <p className="pbio">{profile.bio}</p>
         </section>
       ) : null}
 
-      <dl className="pfacts">
-        {facts.map((fact) => (
-          <div
-            key={fact.key}
-            className={`pfact${fact.wide ? " pfact--wide" : ""}`}
-          >
-            <dt className="pfact__k">{fact.label}</dt>
-            <dd className="pfact__v">{fact.value}</dd>
-          </div>
-        ))}
-      </dl>
+      {isGuestView ? (
+        <div className="pprofile-album-lock">
+          <span className="pprofile-album-lock__icon" aria-hidden>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="4" y="10.5" width="16" height="10" rx="2.5" />
+              <path d="M8 10.5V7.4a4 4 0 0 1 8 0v3.1" />
+            </svg>
+          </span>
+          <span>
+            <strong>{fillHomeCopy(d.home.albumLockedTitle, { n: 4 })}</strong>
+            <small>{fillHomeCopy(d.home.albumLockedHint, { name: displayName })}</small>
+          </span>
+        </div>
+      ) : null}
 
-      {interestKeys.length || profile.interests ? (
+      {!isGuestView ? (
+        <dl className="pfacts">
+          {facts.map((fact) => (
+            <div
+              key={fact.key}
+              className={`pfact${fact.wide ? " pfact--wide" : ""}`}
+            >
+              <dt className="pfact__k">{fact.label}</dt>
+              <dd className="pfact__v">{fact.value}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
+
+      {!isGuestView && (interestKeys.length || profile.interests) ? (
         <section className="psection">
           <h2 className="psection__h">{d.interests}</h2>
           {interestKeys.length ? (
@@ -247,7 +290,7 @@ export default async function DatingProfilePage({ params }: Props) {
         </section>
       ) : null}
 
-      {!isOwnProfile && currentUser ? (
+      {!isOwnProfile && currentUser && unlocked ? (
         <section className="psection psection--quiet">
           <DatingProfileReportForm
             profileId={profile.id}
@@ -271,7 +314,7 @@ export default async function DatingProfilePage({ params }: Props) {
         </section>
       ) : null}
 
-      {!isOwnProfile && currentUser ? (
+      {!isOwnProfile && currentUser && unlocked ? (
         <div className="pbar">
           <DatingLikeButton
             profileId={profile.id}
@@ -295,6 +338,24 @@ export default async function DatingProfilePage({ params }: Props) {
           >
             {d.messageCta}
           </Link>
+        </div>
+      ) : null}
+
+      {isGuestView ? (
+        <div className="pbar pbar--guest">
+          <Link href={guestJoinHref} className="pbar__cta pbar__cta--guest">
+            {fillHomeCopy(d.home.messageName, { name: displayName })}
+          </Link>
+          <Link
+            href={guestJoinHref}
+            className="pbar__heart"
+            aria-label={d.home.likeAria}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M12 21s-8-4.9-8-10.4A4.6 4.6 0 0 1 12 7.6a4.6 4.6 0 0 1 8 3C20 16.1 12 21 12 21z" />
+            </svg>
+          </Link>
+          <p className="pbar__hint">{d.home.guestGateHint}</p>
         </div>
       ) : null}
     </main>

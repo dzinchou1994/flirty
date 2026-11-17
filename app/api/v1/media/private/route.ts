@@ -4,7 +4,8 @@ import { verifyPrivatePhotoToken } from '@/lib/media/private-token';
 import { viewerHasAlbumGrant } from '@/lib/media/private-url';
 import { prisma } from '@/lib/prisma';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { objectKeyFromUrl } from '@/lib/media/storage';
+import { readLocalUpload } from '@/lib/media/local-read';
+import { objectKeyFromUrl, usesRemoteStorage } from '@/lib/media/storage';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -38,6 +39,21 @@ export async function GET(req: Request) {
 
   const key = objectKeyFromUrl(photo.url);
   if (!key) return err('NOT_FOUND', 'Object missing', { status: 404 });
+
+  // R2 is optional. hasObjectStorage() stays true when the local disk driver
+  // is the one in use, so the check for "no remote bucket" is usesRemoteStorage().
+  if (!usesRemoteStorage()) {
+    const bytes = await readLocalUpload(photo.url);
+    if (!bytes) return err('NOT_FOUND', 'Object missing', { status: 404 });
+    return new Response(new Uint8Array(bytes), {
+      status: 200,
+      headers: {
+        'Content-Type': 'image/webp',
+        'Cache-Control': 'private, max-age=60',
+        'X-Content-Type-Options': 'nosniff',
+      },
+    });
+  }
 
   const accountId = process.env.R2_ACCOUNT_ID?.trim();
   const accessKeyId = process.env.R2_ACCESS_KEY_ID?.trim();

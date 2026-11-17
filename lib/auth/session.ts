@@ -34,7 +34,7 @@ export function attachSessionCookies(
     secure,
     sameSite: 'lax',
     path: '/',
-    maxAge: 30 * 24 * 60 * 60,
+    maxAge: 90 * 24 * 60 * 60,
   });
   return res;
 }

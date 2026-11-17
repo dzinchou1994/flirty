@@ -3,10 +3,13 @@ import 'server-only';
 import { prisma } from '@/lib/prisma';
 import { ensureDatabaseUrl } from '@/lib/db-url';
 import {
+  REFRESH_COOKIE,
   SESSION_COOKIE,
   verifyAccessToken,
+  verifyRefreshToken,
   type AccessClaims,
 } from '@/lib/auth/tokens';
+import { touchLastActive } from '@/lib/auth/touch-last-active';
 
 export type AuthUser = {
   id: string;
@@ -37,14 +40,18 @@ function readCookie(req: Request, name: string): string | undefined {
   return undefined;
 }
 
-function extractToken(req: Request): { token: string; via: 'bearer' | 'cookie' } | null {
+function extractToken(
+  req: Request,
+): { token: string; via: 'bearer' | 'cookie'; kind: 'access' | 'refresh' } | null {
   const auth = req.headers.get('authorization');
   if (auth?.toLowerCase().startsWith('bearer ')) {
     const token = auth.slice(7).trim();
-    if (token) return { token, via: 'bearer' };
+    if (token) return { token, via: 'bearer', kind: 'access' };
   }
-  const cookie = readCookie(req, SESSION_COOKIE);
-  if (cookie) return { token: cookie, via: 'cookie' };
+  const access = readCookie(req, SESSION_COOKIE);
+  if (access) return { token: access, via: 'cookie', kind: 'access' };
+  const refresh = readCookie(req, REFRESH_COOKIE);
+  if (refresh) return { token: refresh, via: 'cookie', kind: 'refresh' };
   return null;
 }
 
@@ -60,15 +67,46 @@ export async function isUserDeletionPending(userId: string): Promise<boolean> {
   return Boolean(row);
 }
 
-/** Resolve identity from bearer token or httpOnly session cookie. */
+/** Resolve identity from bearer / access cookie, or long-lived refresh cookie. */
 export async function getAuth(req: Request): Promise<AuthContext | null> {
   const extracted = extractToken(req);
   if (!extracted) return null;
-  const claims = verifyAccessToken(extracted.token);
+
+  let claims: AccessClaims | null = null;
+  if (extracted.kind === 'access') {
+    claims = verifyAccessToken(extracted.token);
+  }
+  if (!claims && extracted.kind === 'refresh') {
+    const refresh = verifyRefreshToken(extracted.token);
+    if (refresh) {
+      // Synthesize access-shaped claims so callers stay unchanged.
+      claims = {
+        sub: refresh.sub,
+        exp: refresh.exp,
+        ageGate: true,
+        typ: 'access',
+      };
+    }
+  }
+  // Access cookie present but expired — try refresh cookie on the same request.
+  if (!claims) {
+    const refreshTok = readCookie(req, REFRESH_COOKIE);
+    const refresh = verifyRefreshToken(refreshTok);
+    if (refresh) {
+      claims = {
+        sub: refresh.sub,
+        exp: refresh.exp,
+        ageGate: true,
+        typ: 'access',
+      };
+    }
+  }
   if (!claims) return null;
   if (!ensureDatabaseUrl()) return null;
 
   if (await isUserDeletionPending(claims.sub)) return null;
+
+  await touchLastActive(claims.sub);
 
   const user = await prisma.user.findUnique({
     where: { id: claims.sub },

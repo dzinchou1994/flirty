@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { datingHomePath } from '@/lib/i18n/paths';
 import type { Locale } from '@/lib/i18n/types';
 
 export type DatingTabBarLabels = {
@@ -37,11 +38,11 @@ function Icon({ d, extra }: { d: string; extra?: React.ReactNode }) {
   );
 }
 
-function buildTabs(base: string): Tab[] {
+function buildTabs(base: string, locale: Locale): Tab[] {
   return [
     {
       key: 'browse',
-      href: `${base}/gatsnoba/`,
+      href: datingHomePath(locale),
       match: [`${base}/gatsnoba`],
       icon: (
         <Icon
@@ -82,6 +83,10 @@ function buildTabs(base: string): Tab[] {
 const EXACT_SIBLINGS = ['/likes', '/messages'];
 
 function isActive(pathname: string, prefixes: string[], key: string): boolean {
+  if (key === 'browse') {
+    const home = prefixes[0]?.replace(/\/gatsnoba$/, '') ?? '';
+    if (pathname === '/' || pathname === home || pathname === `${home}/`) return true;
+  }
   const hit = prefixes.some(
     (p) => pathname === p || pathname === `${p}/` || pathname.startsWith(`${p}/`),
   );
@@ -102,7 +107,7 @@ export function DatingTabBar({
   labels: DatingTabBarLabels;
 }) {
   const pathname = usePathname() || '';
-  const tabs = buildTabs(`/${locale}`);
+  const tabs = buildTabs(`/${locale}`, locale);
 
   return (
     <nav className="dating-tabbar" aria-label={labels.aria}>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { localePath } from '@/lib/i18n/paths';
+import { datingHomePath, localePath } from '@/lib/i18n/paths';
 import type { Locale } from '@/lib/i18n/types';
 import { QuickExit } from '@/components/dating/QuickExit';
 
@@ -17,7 +17,12 @@ type Props = {
 
 function isDatingChromePath(pathname: string, locale: Locale): boolean {
   const dating = localePath(locale, '/gatsnoba');
+  const landing = localePath(locale, '/gatsnoba/');
   const userDating = localePath(locale, '/user/dating');
+  // Marketing landing owns its own chrome.
+  if (pathname === dating || pathname === landing || pathname === dating.replace(/\/$/, '')) {
+    return false;
+  }
   return (
     pathname.startsWith(dating) ||
     pathname.startsWith(userDating) ||
@@ -33,12 +38,12 @@ function isBrowseRoot(pathname: string, root: string): boolean {
 /** Step back inside dating, or leave dating from browse roots. */
 function datingBackHref(pathname: string, locale: Locale): string {
   const dating = localePath(locale, '/gatsnoba/');
-  const home = localePath(locale, '/');
+  const home = datingHomePath(locale);
 
   if (isBrowseRoot(pathname, dating)) {
     return home;
   }
-  return dating;
+  return home;
 }
 
 /** Mobile-only top chrome to step back within dating or leave to the main site. */

@@ -7,5 +7,5 @@ export default async function RootPage() {
   const h = await headers();
   const jar = await cookies();
   const locale = localeFromRequestHeaders(h, jar.get(LOCALE_COOKIE)?.value);
-  redirect(`/${locale}/gatsnoba/`);
+  redirect(`/${locale}/`);
 }

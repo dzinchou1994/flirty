@@ -25,3 +25,8 @@ export function localePath(locale: Locale, path: string = '/'): string {
   const p = normalizePath(path);
   return p === '/' ? `/${locale}/` : `/${locale}${p}`;
 }
+
+/** Public dating homepage: Georgian at `/`, English at `/en/`. */
+export function datingHomePath(locale: Locale): string {
+  return locale === 'en' ? '/en/' : '/';
+}

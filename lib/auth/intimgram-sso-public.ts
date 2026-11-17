@@ -25,3 +25,12 @@ export function datingSsoCallbackUrl(locale: string, next?: string | null): stri
   if (next) params.set('next', next);
   return `${base}?${params.toString()}`;
 }
+
+/** Browser-ready Intimgram SSO start URL (callback host = current origin). */
+export function intimgramSsoStartHref(locale: string, next?: string | null): string {
+  const returnUrl = datingSsoCallbackUrl(locale, next);
+  const params = new URLSearchParams();
+  params.set('return', returnUrl);
+  params.set('locale', locale);
+  return `${getIntimgramOrigin()}/api/dating-sso/start/?${params.toString()}`;
+}

@@ -31,7 +31,7 @@ describe('private album URLs', () => {
       hasGrant: true,
     });
     assert.ok(url);
-    assert.equal(url!.startsWith('/api/v1/media/private?t='), true);
+    assert.equal(url!.startsWith('/api/v1/media/private/?t='), true);
     assert.equal(url!.includes('media.example.ge'), false);
     assert.equal(url!.includes('secret.webp'), false);
   });

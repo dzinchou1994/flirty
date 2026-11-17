@@ -9,7 +9,7 @@ import {
   distanceBucketBetweenCells,
   type DistanceBucket,
 } from '@/lib/dating/geohash';
-import { presenceFromLastActive, onlineSince } from '@/lib/dating/presence';
+import { presenceFromLastActive } from '@/lib/dating/presence';
 import {
   parseDatingCity,
   parseDatingGenderBucket,
@@ -27,12 +27,9 @@ function visibleBase() {
   return {
     isVisible: true,
     moderationStatus: 'active',
-    bio: { not: '' },
-    // Same rule as the discovery feed: no public photo is fine while online.
-    OR: [
-      { photos: { some: { status: 'approved', visibility: 'public' } } },
-      { user: { lastActiveAt: { gte: onlineSince() } } },
-    ],
+    // Neither a bio nor a photo is required any more: everyone published and
+    // in good standing is discoverable, and ordering decides who leads —
+    // online first, then photographed.
   };
 }
 

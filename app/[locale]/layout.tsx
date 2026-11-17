@@ -1,5 +1,6 @@
 import { DatingHeader } from '@/components/dating/DatingHeader';
 import { DatingTabBar } from '@/components/dating/DatingTabBar';
+import { SessionKeepalive } from '@/components/dating/SessionKeepalive';
 import { DATING_CREATE_NEXT, loginHrefWithNext } from '@/lib/auth/next-paths';
 import { getAppName } from '@/lib/site';
 import { getSessionUser } from '@/lib/auth/server';
@@ -10,9 +11,12 @@ import type { Locale } from '@/lib/i18n/types';
 
 export default async function LocaleLayout({
   children,
+  modal,
   params,
 }: {
   children: React.ReactNode;
+  /** Parallel slot filled only by the intercepting profile route. */
+  modal: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
   const { locale: raw } = await params;
@@ -22,6 +26,7 @@ export default async function LocaleLayout({
 
   return (
     <>
+      <SessionKeepalive enabled={Boolean(user)} />
       <DatingHeader
         locale={locale}
         appName={getAppName()}
@@ -40,8 +45,17 @@ export default async function LocaleLayout({
             ? { href: localePath(locale, DATING_CREATE_NEXT), label: d.editProfile }
             : { href: loginHrefWithNext(DATING_CREATE_NEXT, locale), label: d.heroCta }
         }
+        quickFilters={{
+          heading: d.filtersTitle,
+          online: d.filtersOnlineOnly,
+          all: d.filterAll,
+          male: d.filterMale,
+          female: d.filterFemale,
+          trans: d.filterTrans,
+        }}
       />
       {children}
+      {modal}
       <DatingTabBar locale={locale} labels={d.tabBar} />
     </>
   );

@@ -9,7 +9,8 @@ import {
 import { isUserDeletionPending } from '@/lib/auth/getAuth';
 import { attachSessionCookies, issueSession } from '@/lib/auth/session';
 import { parseSafeDatingNext } from '@/lib/auth/safe-next';
-import { localePath } from '@/lib/i18n/paths';
+import { datingHomePath, localePath } from '@/lib/i18n/paths';
+import { publicRedirect } from '@/lib/http/public-origin';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,7 +38,7 @@ export async function GET(request: NextRequest) {
       : `/${locale}/shesvla/?error=oauth`;
 
   if (!code || !state || !storedState || !codeVerifier || state !== storedState) {
-    return NextResponse.redirect(new URL(failPath, request.url));
+    return NextResponse.redirect(publicRedirect(request, failPath));
   }
 
   try {
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
     };
 
     if (!info.providerAccountId) {
-      return NextResponse.redirect(new URL(failPath, request.url));
+      return NextResponse.redirect(publicRedirect(request, failPath));
     }
 
     const user =
@@ -63,24 +64,22 @@ export async function GET(request: NextRequest) {
 
     if (!user) {
       return NextResponse.redirect(
-        new URL(`/${locale}/shesvla/?error=no_account`, request.url),
+        publicRedirect(request, `/${locale}/shesvla/?error=no_account`),
       );
     }
 
     if (await isUserDeletionPending(user.id)) {
       return NextResponse.redirect(
-        new URL(`/${locale}/shesvla/?error=ACCOUNT_DELETED`, request.url),
+        publicRedirect(request, `/${locale}/shesvla/?error=ACCOUNT_DELETED`),
       );
     }
 
     const session = issueSession(user.id);
-    const dest = next
-      ? localePath(locale, next)
-      : localePath(locale, '/gatsnoba/');
-    const res = NextResponse.redirect(new URL(dest, request.url));
+    const dest = next ? localePath(locale as 'ka' | 'en', next) : datingHomePath(locale as 'ka' | 'en');
+    const res = NextResponse.redirect(publicRedirect(request, dest));
     return attachSessionCookies(res, session);
   } catch (e) {
     console.error('[auth/google/callback]', e);
-    return NextResponse.redirect(new URL(failPath, request.url));
+    return NextResponse.redirect(publicRedirect(request, failPath));
   }
 }

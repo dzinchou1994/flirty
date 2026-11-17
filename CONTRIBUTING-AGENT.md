@@ -8,16 +8,15 @@ session does not undo work or repeat an outage.
 A standalone dating app, **live at https://dating.intimgram.com**, running on
 its own Hetzner server (`dating-prod`, 91.99.91.148) behind Caddy.
 
-It shares **one PostgreSQL database and one `User` table** with the community
-app intimgram.com, reached over a WireGuard tunnel at `10.90.0.1:5432` as the
-least-privilege role `dating_app`. There is no account sync and no second
-identity system — that is deliberate.
+It has **its own Postgres on dating-prod** (compose service `db`). The database
+was forked once from Intimgram so existing usernames and password hashes still
+work. New users are created only here. Password changes are not synced back.
 
 | Path | What it is |
 |---|---|
 | `~/Documents/Projects/Dating` | **this repo** — the dating app, dev on port 3003 |
-| `~/Documents/Projects/Intimgram` | the community app, intimgram.com. **Owns `prisma/migrations`.** |
-| `~/Documents/Projects/dating-app-infra` | server config, deploy script, runbooks |
+| `~/Documents/Projects/Intimgram` | the community app, intimgram.com. Separate database. |
+| `~/Documents/Projects/dating-app-infra` | server config, deploy script, fork and backup scripts |
 
 If the header says something other than the dating app's name, you are
 probably running the wrong project. The brand comes only from
@@ -25,18 +24,18 @@ probably running the wrong project. The brand comes only from
 
 ## Hard rules
 
-**Never run a migration from this repo.** `prisma/migrations` belongs to the
-Intimgram repo. Here there is only `npm run db:generate`. New SQL goes in
-`prisma/pending-intimgram-migrations/NNNN_name/migration.sql` and is applied
-from the other repo following `dating-app-infra/docs/APPLY-MIGRATIONS.md`.
+**This repo owns `prisma/migrations`.** Production applies them with
+`npm run db:migrate` (`prisma migrate deploy`), which `deploy.sh` runs when
+`DATABASE_URL` points at the local `db` host. Do not run `migrate dev` against
+production. Do not apply Dating migrations on Intimgram.
 
 **The schema and the live database must move together.** On 10 November a
 deploy shipped a `schema.prisma` containing migration 0033's columns before
 0033 had been applied. Prisma then generated a client that selected
 `DatingProfile.weightKg`, Postgres rejected every query, and the dating page
-on intimgram.com went blank for the public. The error is silent: a wrapper
-catches it and returns an empty list, so it looks like "no profiles" rather
-than a crash. **Migrations 0033 and 0034 are now applied.**
+went blank for the public. The error is silent: a wrapper catches it and
+returns an empty list, so it looks like "no profiles" rather than a crash.
+The fork baseline already includes 0033 and 0034.
 
 **Always run both checks before deploying.** Two production incidents in one
 evening came from skipping them:

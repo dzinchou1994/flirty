@@ -59,18 +59,8 @@ discoverable OR
 | `PUT/DELETE /me/contacts` | replace / clear hashes |
 | `POST/DELETE /blocks` | create / remove block |
 
-## Grants (intimgram DB after migrate)
-
-```sql
-GRANT SELECT, INSERT, UPDATE, DELETE ON
-  "DatingContactHash", "DatingBlock", "DatingAlbumGrant", "DatingTap"
-TO dating_app;
-```
-
 ## Migration location
 
-- `0029` contact hashes — already in Intimgram
-- `0031` blocks / visibility / geohash / private albums / taps / report SLA —
-  `GEOESKORT/prisma/migrations/0031_dating_safety_privacy_discovery/`
-  (handoff copy: `docs/intimgram-migrations/0031_….sql`)
-- **Not applied** from this Dating repo.
+Dating owns its database and `prisma/migrations`. The 0031 columns are in the
+baseline migration. `docs/intimgram-migrations/` is the historical handoff
+that was applied on the shared database before the fork.

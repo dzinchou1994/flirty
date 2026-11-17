@@ -1,7 +1,8 @@
 import crypto from 'crypto';
 
-const ACCESS_TTL_SEC = 15 * 60;
-const REFRESH_TTL_SEC = 30 * 24 * 60 * 60;
+/** Stay signed in across visits. 15m was logging people out constantly. */
+const ACCESS_TTL_SEC = 30 * 24 * 60 * 60;
+const REFRESH_TTL_SEC = 90 * 24 * 60 * 60;
 
 function accessSecret(): string {
   return process.env.AUTH_SESSION_SECRET || 'dev-access-secret';

@@ -7,7 +7,7 @@ import { hydrateDatingProfile, type DatingProfileView } from '@/lib/dating/share
 import { serializePublicProfile } from '@/lib/dating/serialize';
 import { getDatingDict } from '@/lib/i18n/dating-dict';
 import { isLocale } from '@/lib/i18n/config';
-import { localePath } from '@/lib/i18n/paths';
+import { datingHomePath, localePath } from '@/lib/i18n/paths';
 import type { Locale } from '@/lib/i18n/types';
 import { prisma } from '@/lib/prisma';
 import { ensureDatabaseUrl } from '@/lib/db-url';
@@ -51,7 +51,7 @@ export default async function UserDatingPage({ params }: Props) {
           draftKey={user.id}
           accountGender={user.gender}
           locale={locale}
-          backHref={localePath(locale, '/gatsnoba/')}
+          backHref={datingHomePath(locale)}
           messages={{
           required: d.required,
           save: d.save,

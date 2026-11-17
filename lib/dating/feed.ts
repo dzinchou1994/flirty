@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { prisma } from '@/lib/prisma';
+import { rankDiscovery, type Rankable } from '@/lib/dating/rank';
 import { loadPrivacyViewer, privacyWhereForViewer } from '@/lib/dating/privacy';
 import { decodeCursor, encodeCursor } from '@/lib/dating/cursor';
 import { serializePublicProfile } from '@/lib/dating/serialize';
@@ -37,21 +38,29 @@ const gridUser = {
 };
 
 /** Cap how many lean rows we rank for distance sort (tunneled DB friendly). */
-const DISTANCE_RANK_WINDOW = 120;
+/**
+ * How many candidates the distance-ranked branch pulls before sorting.
+ *
+ * This is a hard ceiling on the whole feed, not just the first page: the
+ * cursor indexes into the ranked array built from this window, so a viewer
+ * with a location could never see more than 120 profiles however far they
+ * scrolled — 117 after the distance filter, against 782 visible ones.
+ *
+ * 1000 covers the entire visible population today. Past a few thousand
+ * profiles the ranking has to move into SQL (geohash prefix buckets) instead
+ * of being done in memory; this constant is not a substitute for that.
+ */
+const DISTANCE_RANK_WINDOW = 1000;
 
 export function datingFeedVisibleWhere() {
   return {
     isVisible: true,
     moderationStatus: 'active',
-    bio: { not: '' },
-    // A profile normally needs an approved photo. Someone who is online right
-    // now is shown without one: there are many photoless accounts and an empty
-    // grid is worse than a placeholder card. They drop out again the moment
-    // they go offline, so the feed never fills with dormant blank profiles.
-    OR: [
-      { photos: { some: { status: 'approved' } } },
-      { user: { lastActiveAt: { gte: onlineSince() } } },
-    ],
+    // Everyone published and in good standing is discoverable. A bio and a
+    // photo used to be hard requirements, which hid most of the population:
+    // 782 of ~700+ accounts passed, and the viewer saw a fraction of that.
+    // Who leads is now a ranking question, not a visibility one — see
+    // rankDiscovery(): online first, then photographed, then distance.
   };
 }
 
@@ -190,40 +199,48 @@ export async function listDiscoveryFeed(
       id: true,
       geohashCell: true,
       presenceEnabled: true,
+      genderBucket: true,
+      photos: { where: { status: 'approved' }, select: { id: true }, take: 1 },
       user: { select: { lastActiveAt: true } },
     },
+    // Without an explicit order the window was whatever Postgres returned,
+    // so the same request could yield a different 120 each time and the
+    // cursor's findIndex could land on a row that had moved or vanished.
+    orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }],
     take: DISTANCE_RANK_WINDOW,
   });
 
-  type Ranked = {
-    rank: number;
-    lastActive: number;
-    id: string;
+  type Ranked = Rankable & {
     distanceBucket: DistanceBucket;
     presence: ReturnType<typeof presenceFromLastActive>;
   };
 
-  const ranked: Ranked[] = lean
+  const onlineCutoff = onlineSince().getTime();
+
+  const candidates: Ranked[] = lean
     .map((row) => {
       let distanceBucket = distanceBucketBetweenCells(viewerCell, row.geohashCell);
       if (!row.presenceEnabled) {
         distanceBucket = '10km+';
       }
       return {
-        rank: bucketRank(distanceBucket),
-        lastActive: row.user.lastActiveAt.getTime(),
         id: row.id,
+        genderBucket: row.genderBucket,
+        isOnline:
+          row.presenceEnabled && row.user.lastActiveAt.getTime() >= onlineCutoff,
+        hasPhoto: row.photos.length > 0,
+        distanceRank: bucketRank(distanceBucket),
+        lastActive: row.user.lastActiveAt.getTime(),
         distanceBucket,
         presence: presenceFromLastActive(row.user.lastActiveAt, row.presenceEnabled),
       };
     })
     .filter((row) => distanceBucketAllowed(row.distanceBucket, filters.distance));
 
-  ranked.sort((a, b) => {
-    if (a.rank !== b.rank) return a.rank - b.rank;
-    if (a.lastActive !== b.lastActive) return b.lastActive - a.lastActive;
-    return a.id < b.id ? 1 : -1;
-  });
+  // Online first, then photographed, then nearest — and interleaved by gender
+  // so the grid never opens as one long run of whichever gender happens to be
+  // more active. See lib/dating/rank.ts.
+  const ranked: Ranked[] = rankDiscovery(candidates);
 
   let start = 0;
   if (cursor?.i) {

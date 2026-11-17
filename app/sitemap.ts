@@ -9,12 +9,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = getSiteUrl();
   const lastModified = new Date();
 
-  return locales.flatMap((locale) =>
-    PUBLIC_PATHS.map((path) => ({
-      url: `${base}/${locale}${path}`,
+  const homeLanguages = {
+    'ka-GE': `${base}/`,
+    en: `${base}/en/`,
+  };
+
+  return [
+    {
+      url: `${base}/`,
       lastModified,
       changeFrequency: 'weekly' as const,
-      priority: path === '/gatsnoba/' ? 1 : 0.5,
-    })),
-  );
+      priority: 1,
+      alternates: { languages: homeLanguages },
+    },
+    {
+      url: `${base}/en/`,
+      lastModified,
+      changeFrequency: 'weekly' as const,
+      priority: 1,
+      alternates: { languages: homeLanguages },
+    },
+    ...locales.flatMap((locale) =>
+      PUBLIC_PATHS.map((path) => ({
+        url: `${base}/${locale}${path}`,
+        lastModified,
+        changeFrequency: 'weekly' as const,
+        priority: 0.5,
+      })),
+    ),
+  ];
 }

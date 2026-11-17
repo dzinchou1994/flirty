@@ -13,6 +13,7 @@ import { decodeCursor, encodeCursor } from '@/lib/dating/cursor';
 import { absoluteMediaUrl } from '@/lib/site';
 import { buildDatingPushPayload } from '@/lib/dating/push-payload';
 import { serializePublicProfile } from '@/lib/dating/serialize';
+import { viewerFeedUnlocked } from '@/lib/dating/discovery-access';
 
 export const dynamic = 'force-dynamic';
 
@@ -143,9 +144,12 @@ export async function POST(req: Request) {
 
   const own = await prisma.datingProfile.findUnique({
     where: { userId: auth.user.id },
-    include: { photos: { where: { status: 'approved' }, take: 1 } },
+    include: {
+      photos: { where: { status: 'approved' }, take: 1 },
+      user: { select: { lastActiveAt: true } },
+    },
   });
-  if (!own || !own.bio.trim() || own.photos.length === 0 || own.moderationStatus !== 'active') {
+  if (!own || !viewerFeedUnlocked(own)) {
     return err('PROFILE_LOCKED', 'Your profile cannot like yet', { status: 403 });
   }
 

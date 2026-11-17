@@ -1,5 +1,6 @@
 import 'server-only';
 import { prisma } from '@/lib/prisma';
+import { onlineSince } from '@/lib/dating/presence';
 import { serializePublicProfile } from '@/lib/dating/serialize';
 import { hydrateDatingProfile, type DatingProfileView } from '@/lib/dating/shared';
 
@@ -23,9 +24,11 @@ export async function userHasUnlockingDatingProfile(userId: string): Promise<boo
   const count = await prisma.datingProfile.count({
     where: {
       userId,
-      photos: { some: { status: 'approved' } },
-      bio: { not: '' },
       moderationStatus: 'active',
+      OR: [
+        { photos: { some: { status: 'approved' } } },
+        { user: { lastActiveAt: { gte: onlineSince() } } },
+      ],
     },
   });
   return count > 0;

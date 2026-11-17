@@ -34,7 +34,7 @@ import {
   type DatingCity,
   type DatingGenderBucket,
 } from '@/lib/dating/presets';
-import { localePath } from '@/lib/i18n/paths';
+import { datingHomePath } from '@/lib/i18n/paths';
 import type { Locale } from '@/lib/i18n/types';
 
 const BUCKETS: DatingGenderBucket[] = ['male', 'female', 'trans'];
@@ -88,9 +88,10 @@ function toggleIn<T extends string>(list: T[], value: T): T[] {
   return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
 }
 
-function browseHref(draft: DiscoveryFilters): string {
+function browseHref(draft: DiscoveryFilters, locale: Locale): string {
   const query = discoveryFiltersToSearchParams(draft).toString();
-  return query ? `/gatsnoba/?${query}` : '/gatsnoba/';
+  const home = datingHomePath(locale);
+  return query ? `${home}?${query}` : home;
 }
 
 export function DatingFiltersSheet({
@@ -171,13 +172,21 @@ export function DatingFiltersSheet({
 
   function apply() {
     setOpen(false);
-    router.push(localePath(locale, browseHref(draft)));
+    router.push(browseHref(draft, locale));
   }
 
   const ageMin = draft.ageMin ?? DATING_AGE_MIN;
   const ageMax = draft.ageMax ?? DATING_AGE_MAX;
   const heightMin = draft.heightMin ?? DATING_HEIGHT_MIN;
   const heightMax = draft.heightMax ?? DATING_HEIGHT_MAX;
+
+  // The trigger lives in the site header, not in a band of its own: an empty
+  // toolbar row above the grid was pure dead space on every visit without an
+  // active filter.
+  const headerSlot =
+    mounted && typeof document !== 'undefined'
+      ? document.getElementById('dating-header-slot')
+      : null;
 
   const sheet =
     mounted && open
@@ -460,9 +469,8 @@ export function DatingFiltersSheet({
         )
       : null;
 
-  return (
-    <>
-      <button
+  const trigger = (
+    <button
         type="button"
         className={`dating-filter-trigger${appliedCount > 0 ? ' is-active' : ''}`}
         aria-expanded={open}
@@ -481,6 +489,11 @@ export function DatingFiltersSheet({
           <span className="dating-filter-trigger__badge">{appliedCount}</span>
         ) : null}
       </button>
+  );
+
+  return (
+    <>
+      {headerSlot ? createPortal(trigger, headerSlot) : mounted ? trigger : null}
       {sheet}
     </>
   );

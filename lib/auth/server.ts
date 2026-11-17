@@ -3,18 +3,20 @@ import 'server-only';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { ensureDatabaseUrl } from '@/lib/db-url';
-import { SESSION_COOKIE, verifyAccessToken } from '@/lib/auth/tokens';
+import {
+  REFRESH_COOKIE,
+  SESSION_COOKIE,
+  verifyAccessToken,
+  verifyRefreshToken,
+} from '@/lib/auth/tokens';
 import { isUserDeletionPending } from '@/lib/auth/getAuth';
+import { touchLastActive } from '@/lib/auth/touch-last-active';
 
-export async function getSessionUser() {
-  if (!ensureDatabaseUrl()) return null;
-  const jar = await cookies();
-  const token = jar.get(SESSION_COOKIE)?.value;
-  const claims = verifyAccessToken(token);
-  if (!claims) return null;
-  if (await isUserDeletionPending(claims.sub)) return null;
+async function loadUser(userId: string) {
+  if (await isUserDeletionPending(userId)) return null;
+  await touchLastActive(userId);
   return prisma.user.findUnique({
-    where: { id: claims.sub },
+    where: { id: userId },
     select: {
       id: true,
       username: true,
@@ -26,4 +28,22 @@ export async function getSessionUser() {
       stripeSubscriptionId: true,
     },
   });
+}
+
+/**
+ * Resolve the signed-in user for RSC / pages.
+ * Falls back to the long-lived refresh cookie when the access cookie expired,
+ * so a short access TTL cannot silently log people out on every navigation.
+ */
+export async function getSessionUser() {
+  if (!ensureDatabaseUrl()) return null;
+  const jar = await cookies();
+
+  const access = verifyAccessToken(jar.get(SESSION_COOKIE)?.value);
+  if (access) return loadUser(access.sub);
+
+  const refresh = verifyRefreshToken(jar.get(REFRESH_COOKIE)?.value);
+  if (refresh) return loadUser(refresh.sub);
+
+  return null;
 }

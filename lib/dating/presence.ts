@@ -1,6 +1,16 @@
 export type PresenceLabel = 'online' | 'active_today' | 'active_this_week' | 'hidden';
 
 const ONLINE_MS = 15 * 60 * 1000;
+
+/** True when lastActiveAt is inside the "online now" window. */
+export function isRecentlyOnline(
+  lastActiveAt: Date | null | undefined,
+  now: number = Date.now(),
+): boolean {
+  if (!lastActiveAt) return false;
+  return now - lastActiveAt.getTime() < ONLINE_MS;
+}
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 const WEEK_MS = 7 * DAY_MS;
 

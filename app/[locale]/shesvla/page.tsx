@@ -5,6 +5,7 @@ import { AuthClient } from '@/components/dating/AuthClient';
 import { getAppName } from '@/lib/site';
 import { getDatingDict } from '@/lib/i18n/dating-dict';
 import { isLocale } from '@/lib/i18n/config';
+import { datingHomePath } from '@/lib/i18n/paths';
 import type { Locale } from '@/lib/i18n/types';
 
 export const dynamic = 'force-dynamic';
@@ -24,7 +25,7 @@ export default async function LoginPage({
       <div className="auth-page__glow" aria-hidden />
       <div className="auth-page__inner">
         <Link
-          href={`/${locale}/gatsnoba/`}
+          href={datingHomePath(locale)}
           className="auth-brand"
           aria-label={getAppName()}
         >

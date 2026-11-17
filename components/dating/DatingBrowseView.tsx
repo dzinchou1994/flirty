@@ -20,7 +20,7 @@ import {
   discoveryFiltersToSearchParams,
   EMPTY_DISCOVERY_FILTERS,
 } from '@/lib/dating/discovery-filters';
-import { localePath } from '@/lib/i18n/paths';
+import { datingHomePath, localePath } from '@/lib/i18n/paths';
 import type { Locale } from '@/lib/i18n/types';
 import type { DatingFiltersSheetLabels } from '@/components/dating/DatingFiltersSheet';
 
@@ -50,15 +50,9 @@ type Labels = {
   genderLabels: Record<DatingGenderBucket, string>;
   showMeLabels: Record<DatingShowMe, string>;
   heroTitle: string;
-  heroSubtitle: string;
+  heroMeta: string;
+  heroLead: string;
   heroCta: string;
-  heroCtaLogin: string;
-  heroFeaturePrivacy: string;
-  heroFeatureLocal: string;
-  heroFeatureFree: string;
-  heroFeatureFast: string;
-  heroStatsProfiles: string;
-  heroStatsHint: string;
   discoverTitle: string;
   filtersOpen: string;
   filtersTitle: string;
@@ -190,7 +184,8 @@ export function DatingBrowseView({
       city: options.city === undefined ? city : options.city,
     });
     const query = next.toString();
-    return query ? `/gatsnoba/?${query}` : '/gatsnoba/';
+    const home = datingHomePath(locale);
+    return query ? `${home}?${query}` : home;
   }
 
   function clearAllFilters(): string {
@@ -208,64 +203,58 @@ export function DatingBrowseView({
     activeChips.push({
       key: 'bucket',
       label: bucketLabels[activeBucket],
-      href: localePath(locale, browseHref({ bucket: null, viewAll: true })),
+      href: browseHref({ bucket: null, viewAll: true }),
     });
   }
   if (city) {
     activeChips.push({
       key: 'city',
       label: labels.cityLabels[city],
-      href: localePath(locale, browseHref({ city: null, viewAll: allActive })),
+      href: browseHref({ city: null, viewAll: allActive }),
     });
   }
   if (filters.ageMin != null || filters.ageMax != null) {
     activeChips.push({
       key: 'age',
       label: `${labels.filtersAge} ${filters.ageMin ?? '18'}–${filters.ageMax ?? '99'}`,
-      href: localePath(locale, browseHref({ ageMin: null, ageMax: null })),
+      href: browseHref({ ageMin: null, ageMax: null }),
     });
   }
   if (filters.heightMin != null || filters.heightMax != null) {
     activeChips.push({
       key: 'height',
       label: `${labels.filtersHeight} ${filters.heightMin ?? 140}–${filters.heightMax ?? 220}`,
-      href: localePath(locale, browseHref({ heightMin: null, heightMax: null })),
+      href: browseHref({ heightMin: null, heightMax: null }),
     });
   }
   if (filters.distance !== 'any') {
     activeChips.push({
       key: 'distance',
       label: labels.filterDistanceLabels[filters.distance],
-      href: localePath(locale, browseHref({ distance: 'any' })),
+      href: browseHref({ distance: 'any' }),
     });
   }
   if (filters.onlineOnly) {
     activeChips.push({
       key: 'online',
       label: labels.filtersOnlineOnly,
-      href: localePath(locale, browseHref({ onlineOnly: false })),
+      href: browseHref({ onlineOnly: false }),
     });
   }
   for (const tag of filters.lookingForTags) {
     activeChips.push({
       key: `look-${tag}`,
       label: labels.attributeLabels.lookingForTags[tag],
-      href: localePath(
-        locale,
-        browseHref({
-          lookingForTags: filters.lookingForTags.filter((t) => t !== tag),
-        }),
-      ),
+      href: browseHref({
+        lookingForTags: filters.lookingForTags.filter((t) => t !== tag),
+      }),
     });
   }
   for (const bt of filters.bodyType) {
     activeChips.push({
       key: `body-${bt}`,
       label: labels.attributeLabels.bodyType[bt],
-      href: localePath(
-        locale,
-        browseHref({ bodyType: filters.bodyType.filter((t) => t !== bt) }),
-      ),
+      href: browseHref({ bodyType: filters.bodyType.filter((t) => t !== bt) }),
     });
   }
 
@@ -280,73 +269,19 @@ export function DatingBrowseView({
           labels={labels.locationPrimer}
         />
       ) : null}
-      <div className="page-header community-page__header dating-page__header">
-        <div>
-          <h1 className="dating-page__title">{labels.title}</h1>
-          <p className="community-page__lead">{labels.lead}</p>
-        </div>
-      </div>
-
       {showHero ? (
-        <>
-          <DatingBlurHero
-            locale={locale}
-            isLoggedIn={Boolean(user)}
-            profileCount={profileCount}
-            labels={{
-              title: labels.heroTitle,
-              subtitle: labels.heroSubtitle,
-              cta: labels.heroCta,
-              ctaLogin: labels.heroCtaLogin,
-              featurePrivacy: labels.heroFeaturePrivacy,
-              featureLocal: labels.heroFeatureLocal,
-              featureFree: labels.heroFeatureFree,
-              featureFast: labels.heroFeatureFast,
-              statsProfiles: labels.heroStatsProfiles,
-              statsHint: labels.heroStatsHint,
-              lockHint: labels.blurLockHint,
-            }}
-          />
-        </>
-      ) : null}
-
-      <div className="dating-page__discover">
-        <h2 className="dating-page__discover-title">
-          <span aria-hidden>✨</span> {labels.discoverTitle}
-        </h2>
-        <DatingFiltersSheet
+        <DatingBlurHero
           locale={locale}
-          filters={effectiveFilters}
+          isLoggedIn={Boolean(user)}
+          profileCount={profileCount}
           labels={{
-            filtersOpen: labels.filtersOpen,
-            filtersTitle: labels.filtersTitle,
-            filtersClose: labels.filtersClose,
-            filtersApply: labels.filtersApply,
-            filtersReset: labels.filtersReset,
-            filtersLookingFor: labels.filtersLookingFor,
-            filtersCityAny: labels.filtersCityAny,
-            filtersAge: labels.filtersAge,
-            filtersHeight: labels.filtersHeight,
-            filtersDistance: labels.filtersDistance,
-            filtersOnlineOnly: labels.filtersOnlineOnly,
-            filtersBodyType: labels.filtersBodyType,
-            filtersRelationship: labels.filtersRelationship,
-            filtersLookingForTags: labels.filtersLookingForTags,
-            filtersMeetAt: labels.filtersMeetAt,
-            filtersLanguages: labels.filtersLanguages,
-            filtersPosition: labels.filtersPosition,
-            filtersCount: labels.filtersCount,
-            filterAll: labels.filterAll,
-            filterMale: labels.filterMale,
-            filterFemale: labels.filterFemale,
-            filterTrans: labels.filterTrans,
-            city: labels.city,
-            cityLabels: labels.cityLabels,
-            distanceLabels: labels.filterDistanceLabels,
-            attributeLabels: labels.attributeLabels,
+            title: labels.heroTitle,
+            meta: labels.heroMeta,
+            lead: labels.heroLead,
+            cta: labels.heroCta,
           }}
         />
-      </div>
+      ) : null}
 
       {activeChips.length > 0 ? (
         <div className="dating-active-filters" aria-label={labels.filtersTitle}>
@@ -362,13 +297,50 @@ export function DatingBrowseView({
           ))}
           {activeFilterCount > 0 ? (
             <Link
-              href={localePath(locale, clearAllFilters())}
+              href={clearAllFilters()}
               className="dating-active-filters__clear"
             >
               {labels.filtersReset}
             </Link>
           ) : null}
         </div>
+      ) : null}
+
+      {!showHero ? (
+        <>
+          <DatingFiltersSheet
+            locale={locale}
+            filters={effectiveFilters}
+            labels={{
+              filtersOpen: labels.filtersOpen,
+              filtersTitle: labels.filtersTitle,
+              filtersClose: labels.filtersClose,
+              filtersApply: labels.filtersApply,
+              filtersReset: labels.filtersReset,
+              filtersLookingFor: labels.filtersLookingFor,
+              filtersCityAny: labels.filtersCityAny,
+              filtersAge: labels.filtersAge,
+              filtersHeight: labels.filtersHeight,
+              filtersDistance: labels.filtersDistance,
+              filtersOnlineOnly: labels.filtersOnlineOnly,
+              filtersBodyType: labels.filtersBodyType,
+              filtersRelationship: labels.filtersRelationship,
+              filtersLookingForTags: labels.filtersLookingForTags,
+              filtersMeetAt: labels.filtersMeetAt,
+              filtersLanguages: labels.filtersLanguages,
+              filtersPosition: labels.filtersPosition,
+              filtersCount: labels.filtersCount,
+              filterAll: labels.filterAll,
+              filterMale: labels.filterMale,
+              filterFemale: labels.filterFemale,
+              filterTrans: labels.filterTrans,
+              city: labels.city,
+              cityLabels: labels.cityLabels,
+              distanceLabels: labels.filterDistanceLabels,
+              attributeLabels: labels.attributeLabels,
+            }}
+          />
+        </>
       ) : null}
 
       <div className={`dating-browse-stage${isLocked ? ' dating-browse-stage--locked' : ''}`}>
