@@ -9838,3 +9838,36 @@ body.pmodal-open .dating-tabbar {
   .pmodal__skeleton-photo,
   .pmodal__skeleton-line { animation: none; }
 }
+
+/* ---- browse scroll ---------------------------------------------------- */
+/* A sticky or fixed blur resamples every photo that slides under it, which
+   is what makes the grid feel heavy. Solid bars composite instead. The same
+   blur on each like button keeps a backdrop layer per card. */
+.dating-header,
+.dating-tabbar {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.dating-header {
+  background: #0a0a0e;
+}
+
+.dating-tabbar {
+  background: #111013;
+  box-shadow: none;
+}
+
+.dating-like-btn,
+.dating-card__distance {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(8, 8, 12, 0.92);
+}
+
+/* Cards below the viewport stay out of paint until you reach them. `auto`
+   remembers the real size after the first layout so the scrollbar does not jump. */
+.dating-grid__item {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 180px 180px;
+}

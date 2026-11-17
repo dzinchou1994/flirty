@@ -31,6 +31,9 @@ const gridPhotos = {
   where: { status: 'approved' as const, visibility: 'public' as const },
   orderBy: { sortOrder: 'asc' as const },
   take: 3,
+  // The url column is the image itself when it is still a data URI.
+  // Selecting it made every page of the grid a multi-megabyte payload.
+  select: { id: true, sortOrder: true, status: true, visibility: true },
 };
 
 const gridUser = {
@@ -187,7 +190,7 @@ export async function listDiscoveryFeed(
 
     return {
       ok: true,
-      items: page.map((row) => serializePublicProfile(row)),
+      items: page.map((row) => serializePublicProfile(row, { gridCovers: true })),
       nextCursor,
     };
   }
@@ -276,7 +279,7 @@ export async function listDiscoveryFeed(
       if (!row || !meta) return [];
       return [
         {
-          ...serializePublicProfile(row),
+          ...serializePublicProfile(row, { gridCovers: true }),
           distanceBucket: meta.distanceBucket,
           presence: meta.presence === 'hidden' ? null : meta.presence,
         },

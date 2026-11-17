@@ -1,0 +1,74 @@
+name: Deploy to dating-prod
+
+# Push to main -> typecheck -> rsync source to the server -> rebuild -> migrate.
+# Server config (docker-compose.yml, Caddyfile, .env) is NOT touched here:
+# that lives in dating-app-infra and ships with its ./deploy.sh when it changes.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npx tsc --noEmit
+
+  deploy:
+    needs: check
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SSH setup
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<CFG
+          Host dating
+            HostName ${DEPLOY_HOST}
+            User root
+            IdentityFile ~/.ssh/id_deploy
+            StrictHostKeyChecking yes
+          CFG
+
+      - name: Sync source
+        run: |
+          rsync -az --delete \
+            --exclude '.git' --exclude '.github' --exclude 'node_modules' --exclude '.next' \
+            --exclude '.env*' --exclude '.deploy-keys' --exclude 'backups' \
+            --exclude '.local-db' --exclude 'public/uploads' \
+            --exclude '*.tsbuildinfo' --exclude '.DS_Store' \
+            ./ dating:/root/dating/app/
+
+      - name: Rebuild
+        run: ssh dating 'cd /root/dating && docker compose up -d --build && docker compose ps'
+
+      - name: Migrate
+        run: |
+          ssh dating 'cd /root/dating && grep "^DATABASE_URL=" .env | grep -q "@db:" && docker compose --profile migrate run --rm --build migrate migrate deploy || echo "skip migrate"'
+
+      - name: Health check
+        run: |
+          sleep 10
+          ssh dating 'docker compose -f /root/dating/docker-compose.yml ps --format "{{.Name}} {{.Status}}"'

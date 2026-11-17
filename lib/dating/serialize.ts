@@ -14,7 +14,8 @@ import { resolvePhotoUrlForViewer } from '@/lib/media/private-token';
 
 type PhotoRow = {
   id: string;
-  url: string;
+  /** Omitted on grid queries. The card then loads a small cached cover. */
+  url?: string | null;
   sortOrder: number;
   status?: string | null;
   visibility?: string | null;
@@ -25,6 +26,11 @@ export type SerializeOpts = {
   /** When false, private photos are omitted entirely. */
   includePrivateAlbum?: boolean;
   hasAlbumGrant?: boolean;
+  /**
+   * Discovery cards. Keep the photo count, but do not put the stored bytes
+   * in the payload — the first photo points at the small grid cover.
+   */
+  gridCovers?: boolean;
 };
 
 export function mapRowToView(
@@ -74,10 +80,20 @@ export function mapRowToView(
   const includePrivate = opts.includePrivateAlbum !== false;
 
   const photos = row.photos
-    .map((photo) => {
+    .map((photo, index) => {
       const visibility = photo.visibility === 'private' ? 'private' : 'public';
       if (visibility === 'private' && !includePrivate) return null;
-      const publicUrl = absoluteMediaUrl(photo.url) || photo.url;
+      if (opts.gridCovers) {
+        return {
+          id: photo.id,
+          url: index === 0 ? `/api/v1/media/grid/${photo.id}/` : '',
+          sortOrder: photo.sortOrder,
+          status: parseDatingPhotoStatus(photo.status),
+          visibility: visibility as 'public' | 'private',
+        };
+      }
+      const stored = photo.url ?? '';
+      const publicUrl = stored ? absoluteMediaUrl(stored) || stored : '';
       const url = resolvePhotoUrlForViewer({
         visibility,
         publicUrl,

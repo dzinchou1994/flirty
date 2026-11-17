@@ -21,6 +21,8 @@ import { takeDiscoveryRateLimit } from '@/lib/dating/rate-limit';
 const approvedPublicPhotos = {
   where: { status: 'approved' as const, visibility: 'public' as const },
   orderBy: { sortOrder: 'asc' as const },
+  take: 3,
+  select: { id: true, sortOrder: true, status: true, visibility: true },
 };
 
 function visibleBase() {
@@ -147,7 +149,7 @@ export async function listNearbyGrid(input: {
   return {
     ok: true,
     items: page.map((item) => ({
-      ...serializePublicProfile(item.row),
+      ...serializePublicProfile(item.row, { gridCovers: true }),
       distanceBucket: item.distanceBucket,
       presence: item.presence === 'hidden' ? null : item.presence,
     })),

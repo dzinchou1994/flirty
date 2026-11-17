@@ -14,9 +14,10 @@ const LOCKED_INCLUDE = {
     },
   },
   photos: {
-    where: { status: 'approved' as const },
+    where: { status: 'approved' as const, visibility: 'public' as const },
     orderBy: { sortOrder: 'asc' as const },
     take: 3,
+    select: { id: true, sortOrder: true, status: true, visibility: true },
   },
 } as const;
 
@@ -46,7 +47,7 @@ export async function listLockedPreviewProfiles(opts: {
       orderBy: { updatedAt: 'desc' },
       take: limit,
     });
-    return rows.map((r) => hydrateDatingProfile(serializePublicProfile(r)));
+    return rows.map((r) => hydrateDatingProfile(serializePublicProfile(r, { gridCovers: true })));
   }
 
   const femaleTarget = Math.max(1, Math.round(limit * 0.7));
@@ -68,10 +69,10 @@ export async function listLockedPreviewProfiles(opts: {
   ]);
 
   const females = femaleRows.map((r) =>
-    hydrateDatingProfile(serializePublicProfile(r)),
+    hydrateDatingProfile(serializePublicProfile(r, { gridCovers: true })),
   );
   const others = otherRows.map((r) =>
-    hydrateDatingProfile(serializePublicProfile(r)),
+    hydrateDatingProfile(serializePublicProfile(r, { gridCovers: true })),
   );
 
   // Women first (~70% of the teaser), then everyone else to fill.
