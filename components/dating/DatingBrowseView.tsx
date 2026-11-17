@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { DatingBlurHero } from '@/components/dating/DatingBlurHero';
 import { DatingFiltersSheet } from '@/components/dating/DatingFiltersSheet';
+import { HeaderSlot } from '@/components/dating/HeaderSlot';
 import { DatingInfiniteGrid } from '@/components/dating/DatingInfiniteGrid';
 import {
   LocationConfirm,
@@ -54,6 +55,7 @@ type Labels = {
   heroLead: string;
   heroCta: string;
   heroFine: string;
+  quickFiltersAria: string;
   lockTitle: string;
   lockHint: string;
   lockLogin: string;
@@ -262,6 +264,34 @@ export function DatingBrowseView({
     });
   }
 
+  // Desktop top-bar shortcuts; each is a link that toggles one URL filter.
+  const QUICK_AGE = { min: 18, max: 35 } as const;
+  const quickAgeOn = filters.ageMin === QUICK_AGE.min && filters.ageMax === QUICK_AGE.max;
+  const quickFilters = [
+    {
+      key: 'online',
+      label: labels.onlineNow,
+      on: filters.onlineOnly,
+      href: browseHref({ onlineOnly: !filters.onlineOnly, viewAll: filters.viewAll }),
+    },
+    {
+      key: 'tbilisi',
+      label: labels.cityLabels.tbilisi,
+      on: city === 'tbilisi',
+      href: browseHref({ city: city === 'tbilisi' ? null : 'tbilisi', viewAll: filters.viewAll }),
+    },
+    {
+      key: 'age',
+      label: `${QUICK_AGE.min}–${QUICK_AGE.max}`,
+      on: quickAgeOn,
+      href: browseHref({
+        ageMin: quickAgeOn ? null : QUICK_AGE.min,
+        ageMax: quickAgeOn ? null : QUICK_AGE.max,
+        viewAll: filters.viewAll,
+      }),
+    },
+  ];
+
   // Rounded down to tens so the "N+ more" line never overstates.
   const remainingProfiles = Math.floor(Math.max(profileCount - profiles.length, 0) / 10) * 10;
 
@@ -269,6 +299,21 @@ export function DatingBrowseView({
     <main
       className={`container community-page dating-page dating-page--browse${isLocked ? ' dating-page--locked' : ''}${lockStatus ? ` dating-page--${lockStatus}` : ''}`}
     >
+      <HeaderSlot>
+        <nav className="dating-quick-filters" aria-label={labels.quickFiltersAria}>
+          {quickFilters.map((f) => (
+            <Link
+              key={f.key}
+              href={f.href}
+              className={`dating-quick-filters__chip${f.on ? ' is-on' : ''}`}
+              aria-current={f.on ? 'true' : undefined}
+              scroll={false}
+            >
+              {f.label}
+            </Link>
+          ))}
+        </nav>
+      </HeaderSlot>
       {user ? (
         <LocationConfirm
           enabled
@@ -352,7 +397,9 @@ export function DatingBrowseView({
       ) : null}
 
       <div className={`dating-browse-stage${isLocked ? ' dating-browse-stage--locked' : ''}`}>
-        {isLocked ? (
+        {/* Nothing to unlock when a filter matched no one: the empty state
+            (with its own create-profile link) shows instead of the lock card. */}
+        {isLocked && (profiles.length > 0 || lockStatus) ? (
           <div
             className={`dating-blur-overlay${lockStatus ? ` dating-blur-overlay--${lockStatus}` : ''}`}
             role={lockStatus ? 'status' : undefined}

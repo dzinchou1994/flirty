@@ -9999,6 +9999,9 @@ body.pmodal-open .dating-tabbar {
 
 .dating-lock-card { display: contents; }
 
+/* Desktop top-bar shortcuts; phones keep the filter sheet. */
+.dating-quick-filters { display: none; }
+
 .dating-lock-card__icon,
 .dating-lock-card__title,
 .dating-lock-card__hint,
@@ -10101,9 +10104,46 @@ body.pmodal-open .dating-tabbar {
 
   .dating-tabbar__cta-btn:hover { background: #ff7d4d; }
 
-  /* The logo lives in the sidebar now; keep its grid cell so the
-     header's right-hand items stay put. */
-  .dating-header__brand { visibility: hidden; }
+  /* The logo lives in the sidebar now. The burger is fixed, so the header
+     grid is just the page-action slot (quick filters) and the account button. */
+  .dating-header__brand { display: none; }
+
+  .dating-header { grid-template-columns: minmax(0, 1fr) auto; }
+
+  .dating-header__slot {
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .dating-quick-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dating-quick-filters__chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    color: #b9b5c6 !important;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none !important;
+  }
+
+  .dating-quick-filters__chip:hover {
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #fff !important;
+  }
+
+  .dating-quick-filters__chip.is-on {
+    border-color: #ff6b35;
+    background: rgba(255, 107, 53, 0.14);
+    color: #fff !important;
+  }
 
   .dating-header { padding-inline: 40px; }
 
@@ -10178,6 +10218,11 @@ body.pmodal-open .dating-tabbar {
   }
 
   /* ---- grid: fewer, larger cards ---- */
+  .dating-page--browse .dating-active-filters {
+    padding: 0 40px 16px;
+    border-bottom: 0;
+  }
+
   .dating-page--browse .dating-browse-stage {
     margin-top: 0;
     padding: 0 40px 48px;

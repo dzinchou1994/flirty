@@ -140,6 +140,7 @@ export default async function DatingPage({ params, searchParams }: Props) {
             limit,
             city: filters.city,
             bucket: effectiveBucket,
+            filters,
           }),
           needsCount
             ? prisma.datingProfile.count({ where: datingFeedVisibleWhere() })

@@ -427,6 +427,7 @@ const dating = {
     heroTitle: "Find your person",
     heroMeta: "{n} active profiles",
     heroFine: "18+ · Free · Private",
+    quickFiltersAria: "Quick filters",
     lockTitle: "{n}+ more profiles are waiting",
     lockHint: "Create a profile to see every photo, like and message.",
     lockLogin: "Already have an account? Sign in",

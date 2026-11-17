@@ -30,6 +30,7 @@ export function datingBrowseLabels(d: DatingDict) {
     heroLead: d.heroLeadShort,
     heroCta: d.heroCta,
     heroFine: d.heroFine,
+    quickFiltersAria: d.quickFiltersAria,
     lockTitle: d.lockTitle,
     lockHint: d.lockHint,
     lockLogin: d.lockLogin,

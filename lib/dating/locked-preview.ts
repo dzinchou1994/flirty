@@ -3,6 +3,7 @@ import { datingFeedVisibleWhere } from '@/lib/dating/feed';
 import { serializePublicProfile } from '@/lib/dating/serialize';
 import { hydrateDatingProfile, type DatingProfileView } from '@/lib/dating/shared';
 import type { DatingCity, DatingGenderBucket } from '@/lib/dating/presets';
+import { discoveryAttributeWhere, type DiscoveryFilters } from '@/lib/dating/discovery-filters';
 
 const LOCKED_INCLUDE = {
   user: {
@@ -21,10 +22,12 @@ const LOCKED_INCLUDE = {
   },
 } as const;
 
-function baseWhere(city: DatingCity | null) {
+function baseWhere(city: DatingCity | null, filters: DiscoveryFilters | null) {
   return {
     ...datingFeedVisibleWhere(),
     ...(city ? { city } : {}),
+    // Age / online / attribute filters, the same clauses the signed-in feed uses.
+    ...(filters ? { AND: discoveryAttributeWhere(filters) } : {}),
   };
 }
 
@@ -36,9 +39,10 @@ export async function listLockedPreviewProfiles(opts: {
   limit: number;
   city: DatingCity | null;
   bucket: DatingGenderBucket | null;
+  filters?: DiscoveryFilters | null;
 }): Promise<DatingProfileView[]> {
   const { limit, city, bucket } = opts;
-  const where = baseWhere(city);
+  const where = baseWhere(city, opts.filters ?? null);
 
   if (bucket) {
     const rows = await prisma.datingProfile.findMany({
