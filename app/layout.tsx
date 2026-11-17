@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
 import { Noto_Sans_Georgian } from 'next/font/google';
+import { TopGeCounter } from '@/components/TopGeCounter';
 import { getAppName } from '@/lib/site';
 import { isLocale, defaultLocale } from '@/lib/i18n/config';
 import { LOCALE_COOKIE } from '@/lib/i18n/geo-locale';
@@ -33,7 +34,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang={lang} className={georgianFont.variable}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <TopGeCounter />
+      </body>
     </html>
   );
 }

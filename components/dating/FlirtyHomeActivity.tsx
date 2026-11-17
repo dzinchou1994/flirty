@@ -22,8 +22,9 @@ export function FlirtyHomeActivity({ events }: { events: HomeActivity[] }) {
 
   return (
     <div className="fhome-feed">
-      {shown.map((ev) => (
-        <div className="fhome-feed__row" key={`${ev.text}-${ev.when}`}>
+      {shown.map((ev, i) => (
+        // Two events can share text and time ("new profile — other, 59 min").
+        <div className="fhome-feed__row" key={`${i}-${ev.text}-${ev.when}`}>
           <span className="fhome-feed__avatar" style={{ background: ev.bg }} />
           <span className="fhome-feed__text">{ev.text}</span>
           <span className="fhome-feed__when">{ev.when}</span>

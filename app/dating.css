@@ -10332,3 +10332,15 @@ body.pmodal-open .dating-tabbar {
     box-sizing: border-box;
   }
 }
+
+/* ---- top.ge counter: last thing on every page -------------------------- */
+/* Bottom padding keeps it clear of the phone tab bar. */
+.site-counter {
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px calc(var(--bottom-nav-h, 0px) + var(--safe-bottom, 0px) + 16px);
+}
+
+@media (min-width: 1024px) {
+  .site-counter { padding-bottom: 24px; }
+}
