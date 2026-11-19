@@ -1,9 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { datingHomePath } from '@/lib/i18n/paths';
 import type { Locale } from '@/lib/i18n/types';
+
+function canonPath(path: string): string {
+  if (!path || path === '/') return '/';
+  return path.endsWith('/') ? path : `${path}/`;
+}
 
 export type DatingTabBarLabels = {
   browse: string;
@@ -118,6 +124,34 @@ export function DatingTabBar({
 }) {
   const pathname = usePathname() || '';
   const tabs = buildTabs(`/${locale}`, locale);
+  const leaveTimer = useRef<number | null>(null);
+
+  useEffect(() => {
+    document.documentElement.classList.remove('dating-nav-out');
+    if (leaveTimer.current !== null) {
+      window.clearTimeout(leaveTimer.current);
+      leaveTimer.current = null;
+    }
+  }, [pathname]);
+
+  // The browse grid is hundreds of photo tiles. Leaving it in a soft
+  // navigation restyles every one of them before the next page can paint,
+  // so the click feels frozen. Hide that stage immediately, and if the
+  // client navigation never commits (the profile intercept can swallow
+  // /likes and /messages), follow the link with a real load.
+  function beginLeave(href: string) {
+    document.documentElement.classList.add('dating-nav-out');
+    if (leaveTimer.current !== null) window.clearTimeout(leaveTimer.current);
+    const target = canonPath(new URL(href, window.location.origin).pathname);
+    leaveTimer.current = window.setTimeout(() => {
+      leaveTimer.current = null;
+      if (canonPath(window.location.pathname) === target) {
+        document.documentElement.classList.remove('dating-nav-out');
+        return;
+      }
+      window.location.assign(href);
+    }, 2500);
+  }
 
   return (
     <nav className="dating-tabbar" aria-label={labels.aria}>
@@ -135,6 +169,18 @@ export function DatingTabBar({
             href={tab.href}
             className={`dating-tabbar__item${active ? ' is-active' : ''}`}
             aria-current={active ? 'page' : undefined}
+            onClick={(event) => {
+              if (
+                event.metaKey ||
+                event.ctrlKey ||
+                event.shiftKey ||
+                event.altKey ||
+                event.button !== 0
+              ) {
+                return;
+              }
+              beginLeave(tab.href);
+            }}
           >
             {tab.icon}
             <span>{labels[tab.key]}</span>

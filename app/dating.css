@@ -10009,9 +10009,20 @@ body.pmodal-open .dating-tabbar {
   display: none;
 }
 
+/* Hide the photo grid the moment a tab is pressed. Otherwise the soft
+   navigation restyles every card before the next screen can paint. */
+html.dating-nav-out .dating-browse-stage {
+  display: none;
+}
+
 @media (min-width: 1024px) {
   /* ---- sidebar ---- */
   body { padding-left: 248px; }
+
+  /* The profile panel used to cover the whole viewport, including this
+     rail, so a click on Chat / Likes / Profile hit the backdrop and only
+     closed the panel. Keep the rail clear. */
+  .pmodal { left: 248px; }
 
   .dating-tabbar {
     width: 248px;

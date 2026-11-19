@@ -40,6 +40,22 @@ export function middleware(req: NextRequest) {
       url.pathname = '/';
       return withLocaleCookie(NextResponse.redirect(url), seg);
     }
+    // Soft navigations send `next-url`, which turns on the profile
+    // intercept `(.)gatsnoba/[username]`. That pattern also matches the
+    // static tabs `/gatsnoba/likes` and `/gatsnoba/messages`, so the click
+    // opens a missing profile (404) and the previous page stays on screen.
+    // Dropping the header lets those two routes render as normal pages.
+    if (
+      /^\/(ka|en)\/gatsnoba\/(likes|messages)\/?$/.test(pathname) &&
+      req.headers.has('next-url')
+    ) {
+      const headers = new Headers(req.headers);
+      headers.delete('next-url');
+      return withLocaleCookie(
+        NextResponse.next({ request: { headers } }),
+        seg,
+      );
+    }
     const res = NextResponse.next();
     return withLocaleCookie(res, seg);
   }
